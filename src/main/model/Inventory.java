@@ -12,15 +12,26 @@ public class Inventory {
         inventory = new LinkedList<Items>();
     }
 
+    public boolean isEmpty() {
+        return (inventory.size() == 0);
+    }
+
+    public Items alreadyContained(Items newItem) {
+        for (Items item : inventory) {
+            if (newItem.getItemName().equals(item.getItemName())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     //MODIFIED: this
     // EFFECTS: Adds a new item to the inventory, if item type is already owned, increase amount owned.
     public void addToInventory(Items newItem) {
-        for(Items item : inventory) {
-            if (newItem.getItemName().equals(item.getItemName())) {
-                item.increaseAmount(newItem);
-            } else {
-                inventory.add(newItem);
-            }
+        if (alreadyContained(newItem) == null) {
+            inventory.add(newItem);
+        } else {
+            alreadyContained(newItem).increaseAmount(newItem);
         }
     }
 
@@ -43,5 +54,9 @@ public class Inventory {
 
     public LinkedList<Items> getInventory() {
         return inventory;
+    }
+
+    public int inventorySize() {
+        return inventory.size();
     }
 }

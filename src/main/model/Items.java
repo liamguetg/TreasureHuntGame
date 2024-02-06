@@ -7,11 +7,11 @@ public class Items {
     private int totalValue;
     private int amount;
 
-    public Items(String itemName, int valuePerItem, int amount, String description) {
+    public Items(String itemName, int amount, int valuePerItem) {
         this.itemName = itemName;
         this.valuePerItem = valuePerItem;
         this.amount = amount;
-        this.description = description;
+        description = "A mystery Item";
     }
 
     //MODIFIES: totalValue

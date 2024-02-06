@@ -6,10 +6,10 @@ public class Coins extends Items {
     private int valuePerItem;
     private int amount;
 
-    public Coins(String itemName, int valuePerItem, int amount, String description) {
-        super(itemName, valuePerItem, amount, description);
+    public Coins(String itemName, int amount, int valuePerItem) {
+        super(itemName, amount, valuePerItem);
         this.itemName = "Coin";
-        this.description = "A coin, worth $1. Can be used to purchase items.";
+        description = "A coin, worth $1. Can be used to purchase items.";
         this.amount = amount;
         this.valuePerItem = 1;
 
