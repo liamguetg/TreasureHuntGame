@@ -30,7 +30,7 @@ public class Items {
     }
 
     public int getTotalValue() {
-        return totalValue;
+        return calcTotalValue();
     }
 
     public int getAmount() {
@@ -38,16 +38,19 @@ public class Items {
     }
 
     public void increaseAmount(Items newItem) {
-        this.amount = amount + newItem.getAmount();
+        amount = this.amount + newItem.getAmount();
     }
 
     public void decreaseAmount(int amountToRemove) {
         this.amount = amount - amountToRemove;
     }
 
-//    public void addToInventroy() {
-//        for (Items item : inventory.getInventory()) {
-//        }
-//    }
+
+    // MODIFIES: this
+    // EFFECTS: resets the amount of an item owned to 0, for when the inventory is cleared.
+    public void resetItem() {
+        this.amount = 1;
+    }
+
 
 }
