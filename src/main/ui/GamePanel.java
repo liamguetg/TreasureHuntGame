@@ -1,5 +1,7 @@
 package ui;
 
+import model.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,7 +14,7 @@ public class GamePanel extends JPanel implements Runnable {
     // I have chosen to use small tiles and then scale them to look larger
     final int originalTileSize = 16; //16x16 title
     final int scale = 3;
-    final int tileSize = originalTileSize * scale; // 48
+    public final int tileSize = originalTileSize * scale; // 48
     final int maxScreenHeightTiles = 12;
     final int maxScreenWidthTiles = 16;
     final int screenWidth = maxScreenWidthTiles * tileSize; // 768 pixels
@@ -28,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
     // INSTANTIATING BASIC GAME FUNCTIONS
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
+    Player player = new Player(this, keyH);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -96,23 +99,15 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if(keyH.upPressed == true) {
-            playerY = playerY - playerSpeed;
-        } else if(keyH.downPressed == true) {
-            playerY = playerY + playerSpeed;
-        } else if(keyH.leftPressed == true) {
-            playerX = playerX - playerSpeed;
-        } else if(keyH.rightPressed == true) {
-            playerX = playerX + playerSpeed;
-        }
+        player.update();
+
     }
 
     // Built-in java class used to draw the scene
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        player.draw(g2);
         g2.dispose();
     }
 }
