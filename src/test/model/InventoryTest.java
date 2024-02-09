@@ -15,10 +15,10 @@ class InventoryTest {
     @BeforeEach
     public void beforeEach() {
         inventory = new Inventory();
-        item1 = new Items("Mystery Item 1", 1, 10);
-        item2 = new Items("Mystery Item 2", 1, 50);
-        coin1 = new Coins("Coin", 1, 1);
-        coin2 = new Coins("Coin", 1, 1);
+        item1 = new Items("Mystery Item 1",  10);
+        item2 = new Items("Mystery Item 2",  50);
+        coin1 = new Coins("Coin",  1);
+        coin2 = new Coins("Coin",  1);
     }
 
     public void fillInv() {
@@ -30,18 +30,26 @@ class InventoryTest {
 
     @Test
     public void testAddToInventory() {
-        assertTrue(inventory.isEmpty());
+        assertTrue(inventory.inventoryEmpty());
+        assertTrue(inventory.inventoryCountEmpty());
         assertEquals(0, inventory.getInventorySize());
+        assertEquals(0, inventory.getInventoryCountSize());
+
         inventory.addToInventory(item1);
-        assertFalse(inventory.isEmpty());
-        assertFalse(inventory.isEmpty());
+        assertFalse(inventory.inventoryEmpty());
+        assertFalse(inventory.inventoryCountEmpty());
         assertEquals(1, inventory.getInventorySize());
+        assertEquals(1, inventory.getInventoryCountSize());
+
         inventory.addToInventory(item2);
         assertEquals(2, inventory.getInventorySize());
+        assertEquals(2, inventory.getInventoryCountSize());
         inventory.addToInventory(coin1);
         assertEquals(3, inventory.getInventorySize());
+        assertEquals(3, inventory.getInventoryCountSize());
         inventory.addToInventory(coin2);
         assertEquals(3, inventory.getInventorySize());
+        assertEquals(3, inventory.getInventoryCountSize());
     }
 
     @Test
@@ -66,9 +74,10 @@ class InventoryTest {
         inventory.addToInventory(coin2);
         assertEquals(1, inventory.getValueOfItemInInv(coin1));
         assertEquals(1, inventory.getValueOfItemInInv(coin2));
+
         assertEquals(2, inventory.getTotValueOfItemInInv(coin2));
         assertEquals(2, inventory.getTotValueOfItemInInv(coin1));
-        assertEquals(2, inventory.getTotValueOfItemInInv(coin2));
+
         assertEquals(10, inventory.getValueOfItemInInv(item1));
         assertEquals(10, inventory.getTotValueOfItemInInv(item1));
         assertEquals(50, inventory.getValueOfItemInInv(item2));
@@ -86,25 +95,26 @@ class InventoryTest {
         inventory.removeFromInventory(item2, 1);
         inventory.removeFromInventory(coin1, 1);
         assertEquals(0, inventory.getInventorySize());
-        assertTrue(inventory.isEmpty());
+        assertTrue(inventory.inventoryEmpty());
     }
 
     @Test
     public void testRemoveTwoAtATime() {
         fillInv();
         assertEquals(3, inventory.getInventorySize());
-        inventory.removeFromInventory(coin2, 2);
+        assertEquals(2, inventory.getAmountOfItemInInv(coin1));
+        inventory.removeFromInventory(coin1, 2);
         assertEquals(2, inventory.getInventorySize());
 
         inventory.clearInventory();
-        assertTrue(inventory.isEmpty());
+        assertTrue(inventory.inventoryEmpty());
         assertEquals(0, inventory.getAmountOfItemInInv(coin1));
 
         fillInv();
-        assertFalse(inventory.isEmpty());
+        assertFalse(inventory.inventoryEmpty());
         assertEquals(3, inventory.getInventorySize());
         assertEquals(1, inventory.getAmountOfItemInInv(item1));
-        assertEquals(2, inventory.getAmountOfItemInInv(coin1));
+        assertEquals(2, inventory.getAmountOfItemInInv(coin2));
         inventory.removeFromInventory(coin1, 2);
         assertEquals(2, inventory.getInventorySize());
     }

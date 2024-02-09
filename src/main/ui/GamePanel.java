@@ -4,15 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 
 // Creates the screen for the 2D game.
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
 
     //SCREEN SETTINGS
     // Since visuals will be determined by the size of tiles I am using.
     // And since more tiles == more work,
-    // I have chosen to use small tiles and then scale to look larger
+    // I have chosen to use small tiles and then scale them to look larger
     final int originalTileSize = 16; //16x16 title
     final int scale = 3;
-    final int tileSize = originalTileSize * scale;
+    final int tileSize = originalTileSize * scale; // 48
     final int maxScreenHeightTiles = 12;
     final int maxScreenWidthTiles = 16;
     final int screenWidth = maxScreenWidthTiles * tileSize; // 768 pixels
@@ -60,7 +60,6 @@ public class GamePanel extends JPanel implements Runnable{
             delta += (currentTime - lastTime) / drawInterval;
             timer += (currentTime - lastTime);
             lastTime = currentTime;
-
 
             if(delta >= 1) {
                 update();
