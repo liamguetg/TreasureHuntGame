@@ -1,6 +1,6 @@
 package ui;
 
-import model.Player;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,23 +14,43 @@ public class GamePanel extends JPanel implements Runnable {
     // I have chosen to use small tiles and then scale them to look larger
     final int originalTileSize = 16; //16x16 title
     final int scale = 3;
-    public final int tileSize = originalTileSize * scale; // 48
-    final int maxScreenHeightTiles = 12;
-    final int maxScreenWidthTiles = 16;
-    final int screenWidth = maxScreenWidthTiles * tileSize; // 768 pixels
-    final int screenHeight = maxScreenHeightTiles * tileSize; // 576 pixels
-
-    //Set player default settings
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed= 5;
+    public final int tileSize = originalTileSize * scale; // 48 pixels
+    public final int maxScreenColTiles = 12;
+    public final int maxScreenRowTiles = 16;
+    public final int numColOnScreen = 16;
+    public final int numRowsOnScreen = 12;
+    public final int screenWidth = maxScreenRowTiles * tileSize; // 768 pixels
+    public final int screenHeight = maxScreenColTiles * tileSize; // 576 pixels
 
     int FPS = 60;
 
-    // INSTANTIATING BASIC GAME FUNCTIONS
-    KeyHandler keyH = new KeyHandler();
+    // INSTANTIATES THE GAME FUNCTIONS
+    public TileManager tileM = new TileManager(this);
+    KeyHandler keyH = new KeyHandler(this);
+//    Sound soundEffect = new Sound(); // Dont have the audio files to use
+//    Sound music = new Sound();
+    public CollisionCheck cCheck = new CollisionCheck(this);
+    public ObjectPlacer itemPlacer = new ObjectPlacer(this);
+    public UI ui = new UI(this);
     Thread gameThread;
-    Player player = new Player(this, keyH);
+
+    // ENTITY AND OBJECTS/ITEMS
+    public Player player = new Player(this, keyH);
+    public ObjectSuper objList[] = new ObjectSuper[10];
+
+
+    //WORLD MAP SETTINGS
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+//    public final int worldWith = tileSize * maxWorldCol;
+//    public final int worldHeight = tileSize * maxWorldRow;
+
+    //GAME STATE
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+
+
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -38,8 +58,15 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-
     }
+
+    public void setUpGame() {
+        itemPlacer.setObjects();
+//        playMusic(0);
+//        stopMusic();
+        gameState = playState;
+    }
+
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start(); //Automatically calls the run method
@@ -99,15 +126,64 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
-
+        if (gameState == playState) {
+            player.update();
+        }
+        if (gameState == pauseState) {
+        // nothing for now
+        }
     }
 
     // Built-in java class used to draw the scene
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2 = (Graphics2D) g;
+
+        //DEBUG
+        long drawStart = 0;
+        drawStart = System.nanoTime();
+
+        //TILE
+        tileM.draw(g2);
+
+        //ITEMS
+        for(int i = 0; i < objList.length; i++) {
+            if (objList[i] != null) {
+                objList[i].draw(g2, this);
+            }
+        }
+
+        //PLAYER
         player.draw(g2);
+
+        //UI
+        ui.draw(g2);
+
+        //DEBUG
+        if (keyH.deBugCheckDrawTime == true) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.white);
+            g2.drawString("Draw Time: " + passed, 10 , 400);
+            System.out.println("Draw Time: " + passed);
+        }
+
         g2.dispose();
     }
+
+    //MUSIC/SOUND
+//    public void playMusic(int i) {
+//        music.setFile(i);
+//        music.play();
+//        music.loop();
+//    }
+//    public void stopMusic() {
+//        music.stop();
+//    }
+//    public void playSoundEffect(int i) {
+//        soundEffect.setFile(i);
+//        soundEffect.play();
+//    }
+
 }

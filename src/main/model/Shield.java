@@ -1,6 +1,6 @@
 package model;
 
-public class Shield extends Items {
+public class Shield extends SuperItems {
 
     public Shield(String itemName, int valuePerItem) {
         super(itemName, valuePerItem);

@@ -1,6 +1,6 @@
 package model;
 
-public class Coins extends Items {
+public class Coins extends SuperItems {
 
     public Coins(String itemName, int valuePerItem) {
         super(itemName, valuePerItem);

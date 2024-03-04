@@ -7,16 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
     Inventory inventory;
-    Items item1;
-    Items item2;
-    Items coin1;
-    Items coin2;
+    SuperItems item1;
+    SuperItems item2;
+    SuperItems coin1;
+    SuperItems coin2;
 
     @BeforeEach
     public void beforeEach() {
         inventory = new Inventory();
-        item1 = new Items("Mystery Item 1",  10);
-        item2 = new Items("Mystery Item 2",  50);
+        item1 = new SuperItems("Mystery Item 1",  10);
+        item2 = new SuperItems("Mystery Item 2",  50);
         coin1 = new Coins("Coin",  1);
         coin2 = new Coins("Coin",  1);
     }

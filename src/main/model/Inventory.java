@@ -7,7 +7,7 @@ import java.util.Map;
 
 // Represents a players Inventory, with their picked up items;
 public class Inventory {
-    public LinkedList<Items> inventory;
+    public LinkedList<SuperItems> inventory;
     private Map<String, Integer> inventoryCount;
 
     //EFFECTS: constructs an instance of an inventory with no contents
@@ -17,8 +17,8 @@ public class Inventory {
     }
 
     // EFFECTS: returns the item in inventory whose name matches the new item.
-    public Items getItemInInv(Items newItem) {
-        for (Items item : inventory) {
+    public SuperItems getItemInInv(SuperItems newItem) {
+        for (SuperItems item : inventory) {
             if (newItem.getItemName().equals(item.getItemName())) {
                 return item;
             }
@@ -28,7 +28,7 @@ public class Inventory {
 
     //MODIFIED: this
     // EFFECTS: Adds a new item to the inventory, if item type is already owned, increase amount owned.
-    public void addToInventory(Items newItem) {
+    public void addToInventory(SuperItems newItem) {
         if (getItemInInv(newItem) == null) {
             inventory.add(newItem);
             inventoryCount.put(newItem.getItemName(), 1);
@@ -39,7 +39,7 @@ public class Inventory {
 
     //MODIFIES: this
     //EFFECTS: increases the amount (value) of item in hashmap
-    public void increaseAmountOfItem(Items item) {
+    public void increaseAmountOfItem(SuperItems item) {
         String itemName = item.getItemName();
         inventoryCount.put(itemName, inventoryCount.get(itemName) + 1);
     }
@@ -48,7 +48,7 @@ public class Inventory {
     //REQUIRES: item is owned. amount to remove <= amount owned
     //MODIFIES: this
     //EFFECTS: removes item(s) from list
-    public void removeFromInventory(Items itemToRemove, int amountToRemove) {
+    public void removeFromInventory(SuperItems itemToRemove, int amountToRemove) {
         String itemToRemoveName = itemToRemove.getItemName();
         int amountOfItemInInv = inventoryCount.get(itemToRemoveName);
         int amountLeft = amountOfItemInInv - amountToRemove;
@@ -83,13 +83,13 @@ public class Inventory {
     // GETTERS
 
     // EFFECTS: returns the full inventory
-    public LinkedList<Items> getInventory() {
+    public LinkedList<SuperItems> getInventory() {
         return inventory;
     }
 
     // REQUIRES: item is present in inventory.
     // EFFECTS: gets the amount of an item in inventory
-    public int getAmountOfItemInInv(Items itemInInv) {
+    public int getAmountOfItemInInv(SuperItems itemInInv) {
         if (getItemInInv(itemInInv) == null) {
             return 0;
         } else {
@@ -109,14 +109,14 @@ public class Inventory {
 
     // REQUIRES: item is present in inventory.
     // EFFECTS: gets the value of an item in inventory (value per item)
-    public int getValueOfItemInInv(Items itemInInv) {
+    public int getValueOfItemInInv(SuperItems itemInInv) {
         return itemInInv.getValuePerItem();
 //        return (inventory.get(inventory.indexOf(itemInInv))).getValuePerItem();
     }
 
     // REQUIRES: item is present in inventory.
     // EFFECTS: gets the total value of an item in inventory (value of all the same items combined)
-    public int getTotValueOfItemInInv(Items itemInInv) {
+    public int getTotValueOfItemInInv(SuperItems itemInInv) {
         return getValueOfItemInInv(itemInInv) * inventoryCount.get(itemInInv.getItemName());
     }
 }
