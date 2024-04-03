@@ -4,24 +4,19 @@ package model;
 import ui.GamePanel;
 import ui.KeyHandler;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Player extends Entities {
 
-    GamePanel gp;
     KeyHandler keyH;
-
     public final int screenX;
     public final int screenY;
-    public int hasKey = 0;
 
 
     //EFFECTS: constructor for player
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2); // 360 pixels (~the center of the screen)
@@ -94,38 +89,8 @@ public class Player extends Entities {
     //EFFECTS: Updates status of items on screen if character interacts (collides) with them. Removes, if
     // the conditions are met. Increments hasKey if item is a key, subtracts hasKey if item is a door.
     public void pickUpObject (int i) {
-        if (i != 999) {
-            String objectName = gp.objList[i].name;
 
-            switch (objectName) {
-                case "Key":
-//                    gp.playSoundEffect(1);
-                    hasKey++;
-                    gp.objList[i] = null;
-                    gp.ui.showMessage("You got a key!");
-                    break;
-                case "Door":
-                    if(hasKey > 0) {
-//                        gp.playSoundEffect(3);
-                        gp.objList[i] = null;
-                        hasKey--;
-                        gp.ui.showMessage("You opened the door!");
-                    } else {
-                        gp.ui.showMessage("You need a key to open this door.");
-                    }
-                    break;
-                case "boots":
-//                    gp.playSoundEffect(2);
-                    speed += 2;
-                    gp.objList[i] = null;
-                    gp.ui.showMessage("You got new boots! Speed+2");
-                    break;
-                case "Chest":
-                    gp.ui.gameDone = true;
-//                    gp.stopMusic();
-//                    gp.PlaySE(4);
-                    break;
-            }
+        if (i != 999) {
         }
     }
 
@@ -171,30 +136,15 @@ public class Player extends Entities {
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
-
-
     //EFFECTS: gets the player sprite to display on screen
     public void getPlayerImage() {
-            up1 = setUpPlayerTile("up1");
-            up2 = setUpPlayerTile("up2");
-            down1 = setUpPlayerTile("down1");
-            down2 = setUpPlayerTile("down2");
-            right1 = setUpPlayerTile("right1");
-            right2 = setUpPlayerTile("right2");
-            left1 = setUpPlayerTile("left1");
-            left2 = setUpPlayerTile("left2");
-    }
-
-    public BufferedImage setUpPlayerTile(String playerTileName) {
-        ToolScaleImage scalePlayerTile = new ToolScaleImage();
-        BufferedImage playerImage = null;
-
-        try {
-            playerImage = ImageIO.read(getClass().getResourceAsStream("/BbSprite/boy_" + playerTileName + ".png"));
-            playerImage = scalePlayerTile.scaleImage(playerImage, gp.tileSize, gp.tileSize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return playerImage;
+            up1 = setUpEntityTile("/BbSprite/boy_up1");
+            up2 = setUpEntityTile("/BbSprite/boy_up2");
+            down1 = setUpEntityTile("/BbSprite/boy_down1");
+            down2 = setUpEntityTile("/BbSprite/boy_down2");
+            right1 = setUpEntityTile("/BbSprite/boy_right1");
+            right2 = setUpEntityTile("/BbSprite/boy_right2");
+            left1 = setUpEntityTile("/BbSprite/boy_left1");
+            left2 = setUpEntityTile("/BbSprite/boy_left2");
     }
 }

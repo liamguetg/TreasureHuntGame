@@ -37,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     // ENTITY AND OBJECTS/ITEMS
     public Player player = new Player(this, keyH);
     public ObjectSuper objList[] = new ObjectSuper[10];
+    public Entities npc[] = new Entities[10];
 
 
     //WORLD MAP SETTINGS
@@ -62,6 +63,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setUpGame() {
         itemPlacer.setObjects();
+        itemPlacer.setNPC();
+
 //        playMusic(0);
 //        stopMusic();
         gameState = playState;
@@ -148,9 +151,16 @@ public class GamePanel extends JPanel implements Runnable {
         tileM.draw(g2);
 
         //ITEMS
-        for(int i = 0; i < objList.length; i++) {
+        for (int i = 0; i < objList.length; i++) {
             if (objList[i] != null) {
                 objList[i].draw(g2, this);
+            }
+        }
+
+        //NPC
+        for (int i=0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].draw(g2);
             }
         }
 
