@@ -94,7 +94,32 @@ public class Player extends Entities {
     // the conditions are met. Increments hasKey if item is a key, subtracts hasKey if item is a door.
     public void pickUpObject (int i) {
         if (i != 999) {
+            String objectName = gp.objList[i].name;
 
+            switch (objectName) {
+                case "Key":
+                    hasKey++;
+                    gp.objList[i] = null;
+                    gp.ui.showMessage("You got a key!");
+                    break;
+                case "Door":
+                    if(hasKey > 0) {
+                        gp.objList[i] = null;
+                        hasKey--;
+                        gp.ui.showMessage("You opened the door!");
+                    } else {
+                        gp.ui.showMessage("You need a key to open this door.");
+                    }
+                    break;
+                case "boots":
+                    speed += 2;
+                    gp.objList[i] = null;
+                    gp.ui.showMessage("You got new boots! Speed+2");
+                    break;
+                case "Chest":
+                    gp.ui.gameDone = true;
+                    break;
+            }
         }
     }
 
@@ -108,7 +133,6 @@ public class Player extends Entities {
 
     //EFFECTS: Draws the image of the player on the game screen
     public void draw(Graphics2D g2) {
-
         BufferedImage image = null;
 
         switch(direction) {
