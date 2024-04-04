@@ -13,6 +13,7 @@ public class Entities {
     public int entityWorldX;
     public int entityWorldY;
     public int speed;
+    public int newMoveCounter;
 
     public BufferedImage up1;
     public BufferedImage up2;
@@ -38,9 +39,44 @@ public class Entities {
     public int solidAreaDefaultWidth;
     public int solidAreaDefaultHeight;
     public Boolean collisionOn = false;
+    public String[] dialogue = new String[20];
 
     public Entities(GamePanel gp) {
         this.gp = gp;
+    }
+
+    public void movement() {}
+    public void speak() {}
+
+    public void update() {
+        //NPC movement is characterized for each NPC (in the subclass)
+        movement();
+
+        // COLLISION CHECKS
+        collisionOn = false;
+        gp.collisionCheck.checkTile(this);
+        gp.collisionCheck.checkObject(this, false);
+        gp.collisionCheck.colNpcHitPlayerCheck(this);
+
+        //IF COLLISION IS FALSE, PLAYER CAN MOVE
+        if (collisionOn == false) {
+            switch (direction){
+                case "up": entityWorldY -= speed; break;
+                case "down": entityWorldY += speed; break;
+                case "left": entityWorldX -= speed; break;
+                case "right": entityWorldX += speed; break;
+            }
+        }
+
+        spriteCounter++;
+        if (spriteCounter > 10) {
+            if (spriteNum == 1) {
+                spriteNum = 2;
+            } else if (spriteNum == 2) {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
     }
 
     public void draw(Graphics2D g2) {

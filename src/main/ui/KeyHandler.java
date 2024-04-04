@@ -20,7 +20,6 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_S) {
@@ -34,6 +33,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_A) {
             leftPressed = true;
+        }
+        if (code == KeyEvent.VK_Q) {
+            gp.gameState = gp.playState;
         }
         if (code == KeyEvent.VK_P) {
             if (gp.gameState == gp.playState) {

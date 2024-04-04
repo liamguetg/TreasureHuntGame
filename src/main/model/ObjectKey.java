@@ -10,9 +10,7 @@ public class ObjectKey extends ObjectSuper {
     GamePanel gp;
 
     public ObjectKey(GamePanel gp) {
-
         this.gp = gp;
-
         name = "Key";
         try {
             img = ImageIO.read(getClass().getResourceAsStream("/Items/key.png"));

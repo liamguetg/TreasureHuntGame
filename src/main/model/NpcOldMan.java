@@ -2,6 +2,8 @@ package model;
 
 import ui.GamePanel;
 
+import java.util.Random;
+
 public class NpcOldMan extends Entities {
 
     public NpcOldMan(GamePanel gp) {
@@ -10,6 +12,7 @@ public class NpcOldMan extends Entities {
         direction = "down";
         speed = 1;
         getNPCImage();
+        setDialogue();
     }
 
     //EFFECTS: gets the NPC sprite to display on screen
@@ -22,5 +25,38 @@ public class NpcOldMan extends Entities {
         right2 = setUpEntityTile("/npcSprites/oldman_right2");
         left1 = setUpEntityTile("/npcSprites/oldman_left1");
         left2 = setUpEntityTile("/npcSprites/oldman_left2");
+    }
+
+    public void movement() {
+
+        newMoveCounter++;
+        if (newMoveCounter == 120) {
+
+            Random random = new Random();
+            int i = random.nextInt(4) + 1;
+
+            if (i == 1) {
+                direction = "up";
+            }
+            if (i == 2) {
+                direction = "left";
+            }
+            if (i == 3) {
+                direction = "right";
+            }
+            if (i == 4) {
+                direction = "down";
+            }
+            newMoveCounter = 0;
+        }
+    }
+
+    public void setDialogue () {
+        dialogue[0] = "shits and giggles";
+    }
+
+    public void speak() {
+        gp.ui.currentDialogue = dialogue[0];
+
     }
 }

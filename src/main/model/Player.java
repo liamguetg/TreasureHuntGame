@@ -19,20 +19,22 @@ public class Player extends Entities {
         super(gp);
         this.keyH = keyH;
 
-        screenX = gp.screenWidth/2 - (gp.tileSize/2); // 360 pixels (~the center of the screen)
-        screenY = gp.screenHeight/2 - (gp.tileSize/2); // 264 pixels (~the center of the screen)
+        //PLACE CHARACTER IN CENTER OF SCREEN
+        screenX = gp.screenWidth/2 - (gp.tileSize/2); // 360 pixels
+        screenY = gp.screenHeight/2 - (gp.tileSize/2); // 264 pixels
 
-        // The solid area is the sprites body (not the whole tile), which works out to be these coordinates
+        //HIT-BOX
         solidArea = new Rectangle(8, 16, gp.tileSize - 16, gp.tileSize - 16);
         solidAreaDefaultX = 8;
         solidAreaDefaultY = 16;
 
-        setDefaultValues();
+        setDefaultPlayer();
         getPlayerImage();
     }
 
+    //MODIFIES: this
     //EFFECTS: sets the default (start settings) for the player.
-    public void setDefaultValues() {
+    public void setDefaultPlayer() {
         entityWorldX = gp.tileSize * 23; //column 23 of the worldMap (pixel 1104) (~the middle of the map)
         entityWorldY = gp.tileSize * 21; //row 21 of the worldMap (pixel 1008) (~the middle of the map)
         speed = 4;
@@ -44,7 +46,6 @@ public class Player extends Entities {
     public void update() {
         if (keyH.upPressed == true || keyH.downPressed == true ||
                 keyH.leftPressed == true || keyH.rightPressed == true) {
-
             if (keyH.upPressed == true) {
                 direction = "up";
             } else if (keyH.downPressed == true) {
@@ -55,13 +56,16 @@ public class Player extends Entities {
                 direction = "right";
             }
 
-            // CHECK IF PLAYER IS COLLIDING WITH A SOLID
+            //COLLISION CHECKS: (collision with object and entity produces an int (999 if collision occurs)
+            // this can then be used in subsequent methods that do something as a result of collision)
             collisionOn = false;
-            gp.cCheck.checkTile(this);
+            gp.collisionCheck.checkTile(this);
 
-            // CHECK IF PLAYER IS COLLIDING WITH AN OBJECT
-            int objectIndex = gp.cCheck.checkObject(this, true);
+            int objectIndex = gp.collisionCheck.checkObject(this, true);
             pickUpObject(objectIndex);
+
+            int npcIndex = gp.collisionCheck.entityColCheck(this, gp.npc);
+            interactNPC(npcIndex);
 
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (collisionOn == false) {
@@ -89,8 +93,16 @@ public class Player extends Entities {
     //EFFECTS: Updates status of items on screen if character interacts (collides) with them. Removes, if
     // the conditions are met. Increments hasKey if item is a key, subtracts hasKey if item is a door.
     public void pickUpObject (int i) {
-
         if (i != 999) {
+
+        }
+    }
+
+    public void interactNPC(int i) {
+        if (i != 999) {
+            System.out.println("you hit the bitch");
+            gp.gameState = gp.dialogueState;
+            gp.npc[i].speak();
         }
     }
 

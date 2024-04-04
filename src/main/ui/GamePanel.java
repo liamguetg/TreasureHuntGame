@@ -27,10 +27,10 @@ public class GamePanel extends JPanel implements Runnable {
     // INSTANTIATES THE GAME FUNCTIONS
     public TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
-//    Sound soundEffect = new Sound(); // Dont have the audio files to use
-//    Sound music = new Sound();
-    public CollisionCheck cCheck = new CollisionCheck(this);
-    public ObjectPlacer itemPlacer = new ObjectPlacer(this);
+    //    Sound soundEffect = new Sound(); // Dont have the audio files to use
+    //    Sound music = new Sound();
+    public CollisionCheck collisionCheck = new CollisionCheck(this);
+    public objectPlacer itemPlacer = new objectPlacer(this);
     public UI ui = new UI(this);
     Thread gameThread;
 
@@ -38,7 +38,6 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public ObjectSuper objList[] = new ObjectSuper[10];
     public Entities npc[] = new Entities[10];
-
 
     //WORLD MAP SETTINGS
     public final int maxWorldCol = 50;
@@ -50,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
-
+    public final int dialogueState = 3;
 
 
     public GamePanel() {
@@ -79,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
     //         At each time interval (ie overy 0.0166 sec. to acheive 60FPS).
     @Override
     public void run() {
-        double drawInterval = (double) 1000000000/FPS; // 0.0166 seconds/frame (or 60 FPS)
+        double drawInterval = (double) 1000000000 / FPS; // 0.0166 seconds/frame (or 60 FPS)
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -87,26 +86,25 @@ public class GamePanel extends JPanel implements Runnable {
         long timer = 0;
         int drawCount = 0;
 
-        while(gameThread != null) {
+        while (gameThread != null) {
 
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if(delta >= 1) {
+            if (delta >= 1) {
                 update();
                 repaint();
                 delta--;
                 drawCount++;
             }
 
-            if(timer >= 1000000000) {
+            if (timer >= 1000000000) {
                 System.out.println("FPS:" + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
-
 
 
 // Another method for making a game loop:
@@ -131,24 +129,29 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if (gameState == playState) {
             player.update();
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
+                    npc[i].update();
+                }
+            }
         }
         if (gameState == pauseState) {
-        // nothing for now
+            // nothing for now
+        }
+        if (gameState == dialogueState) {
+            //
         }
     }
 
     // Built-in java class used to draw the scene
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D) g;
 
-        //DEBUG
-        long drawStart = 0;
-        drawStart = System.nanoTime();
 
-        //TILE
         tileM.draw(g2);
+        player.draw(g2);
+        ui.draw(g2);
 
         //ITEMS
         for (int i = 0; i < objList.length; i++) {
@@ -156,31 +159,15 @@ public class GamePanel extends JPanel implements Runnable {
                 objList[i].draw(g2, this);
             }
         }
-
         //NPC
-        for (int i=0; i < npc.length; i++) {
+        for (int i = 0; i < npc.length; i++) {
             if (npc[i] != null) {
                 npc[i].draw(g2);
             }
         }
-
-        //PLAYER
-        player.draw(g2);
-
-        //UI
-        ui.draw(g2);
-
-        //DEBUG
-        if (keyH.deBugCheckDrawTime == true) {
-            long drawEnd = System.nanoTime();
-            long passed = drawEnd - drawStart;
-            g2.setColor(Color.white);
-            g2.drawString("Draw Time: " + passed, 10 , 400);
-            System.out.println("Draw Time: " + passed);
-        }
-
         g2.dispose();
     }
+}
 
     //MUSIC/SOUND
 //    public void playMusic(int i) {
@@ -196,4 +183,4 @@ public class GamePanel extends JPanel implements Runnable {
 //        soundEffect.play();
 //    }
 
-}
+

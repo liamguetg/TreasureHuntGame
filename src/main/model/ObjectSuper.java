@@ -19,9 +19,15 @@ public class ObjectSuper {
     public int solidAreaDefaultWidth = 48;
     public int solidAreaDefaultHeight = 48;
     public Rectangle solidArea = new Rectangle(solidAreaDefaultX, solidAreaDefaultY,
-                                               solidAreaDefaultWidth, solidAreaDefaultHeight); //0, 0, 48, 48
+            solidAreaDefaultWidth, solidAreaDefaultHeight); //0, 0, 48, 48
 
     ToolScaleImage scaleObject = new ToolScaleImage();
+
+    //    EFFECTS: Sets the objects position on the map.
+    public void position(int x, int y) {
+        worldX = gp.tileSize * x;
+        worldY = gp.tileSize * y;
+    }
 
     public void draw(Graphics2D g2, GamePanel gp) {
 
@@ -29,7 +35,7 @@ public class ObjectSuper {
         int screenY = worldY - gp.player.entityWorldY + gp.player.screenY;
 
         // if statement so we only draws the necessary tiles (the tiles surrounding the player)
-        if(worldX + gp.tileSize > gp.player.entityWorldX - gp.player.screenX &&
+        if (worldX + gp.tileSize > gp.player.entityWorldX - gp.player.screenX &&
                 worldX - gp.tileSize < gp.player.entityWorldX + gp.player.screenX &&
                 worldY + gp.tileSize > gp.player.entityWorldY - gp.player.screenY &&
                 worldY - gp.tileSize < gp.player.entityWorldY + gp.player.screenY) {
