@@ -27,6 +27,7 @@ public class Entities {
     public String direction;
     public int spriteCounter = 0;
     public int spriteNum = 1;
+    int line;
 
     /*
      solidArea field is to create the part of the entity which is solid (cannot pass through other solid objects)
@@ -46,6 +47,8 @@ public class Entities {
     }
 
     public void movement() {}
+
+    public void setLine(int i) {}
     public void speak() {}
 
     public void update() {
@@ -55,7 +58,8 @@ public class Entities {
         // COLLISION CHECKS
         collisionOn = false;
         gp.collisionCheck.checkTile(this);
-        gp.collisionCheck.checkObject(this, false);
+        gp.collisionCheck.checkObject(this, false, gp.objList);
+        gp.collisionCheck.checkObject(this, false, gp.randItemList);
         gp.collisionCheck.colNpcHitPlayerCheck(this);
 
         //IF COLLISION IS FALSE, PLAYER CAN MOVE

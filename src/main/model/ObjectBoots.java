@@ -12,7 +12,7 @@ public class ObjectBoots extends ObjectSuper {
     public ObjectBoots(GamePanel gp) {
 
         this.gp = gp;
-        name = "boots";
+        name = "Boots";
         try {
             img = ImageIO.read(getClass().getResourceAsStream("/Items/boots.png"));
             scaleObject.scaleImage(img, gp.tileSize, gp.tileSize);

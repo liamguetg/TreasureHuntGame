@@ -7,6 +7,7 @@ public class KeyHandler implements KeyListener {
     GamePanel gp;
 
     public boolean downPressed, leftPressed, rightPressed, upPressed;
+    public boolean purchaseAttempt;
     boolean deBugCheckDrawTime = false;
 
 
@@ -18,10 +19,91 @@ public class KeyHandler implements KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
+
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
+        if (gp.gameState == gp.playState) {
+            playStateKeyHandler(e);
+        }
+        if (gp.gameState == gp.pauseState) {
+            pauseStateKeyHandler(e);
+        }
+        if (gp.gameState == gp.confirmSaveState) {
+            confirmSaveStateKeyHandler(e);
+        }
+        if (gp.gameState == gp.confirmLoadState) {
+            confirmLoadStateKeyHandler(e);
+        }
+        if (gp.gameState == gp.dialogueState) {
+            dialogueStateKeyHandler(e);
+        }
+        if (gp.gameState == gp.storeState) {
+            storeStateKeyHandler(e);
+        }
+        if (code == KeyEvent.VK_Q) {
+            gp.gameState = gp.playState;
+        }
+    }
+
+
+    public void pauseStateKeyHandler(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_S) {
+            gp.gameState = gp.confirmSaveState;
+        }
+        if (code == KeyEvent.VK_L) {
+            gp.gameState = gp.confirmLoadState;
+        }
+    }
+
+    public void confirmSaveStateKeyHandler(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_Y) {
+            System.out.println("Saved game asshole");
+            gp.gameState = gp.pauseState;
+        }
+        if (code == KeyEvent.VK_N) {
+            gp.gameState = gp.pauseState;
+        }
+    }
+
+    public void confirmLoadStateKeyHandler(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_Y) {
+            System.out.println("Loading game cheating asshole");
+            gp.gameState = gp.pauseState;
+        }
+        if (code == KeyEvent.VK_N) {
+            gp.gameState = gp.pauseState;
+        }
+    }
+
+    public void dialogueStateKeyHandler(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_Y) {
+            gp.gameState = gp.storeState;
+
+        }
+        if (code == KeyEvent.VK_N) {
+            gp.gameState = gp.playState;
+        }
+    }
+
+    public void storeStateKeyHandler(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_Y) {
+            purchaseAttempt = true;
+            }
+        if (code == KeyEvent.VK_N) {
+            gp.gameState = gp.playState;
+        }
+    }
+
+
+    public void playStateKeyHandler(KeyEvent e) {
+        int code = e.getKeyCode();
         if (code == KeyEvent.VK_S) {
             downPressed = true;
         }
@@ -37,27 +119,19 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_I) {
             gp.gameState = gp.inventoryState;
         }
-
-        if (code == KeyEvent.VK_Q) {
-            gp.gameState = gp.playState;
-        }
         if (code == KeyEvent.VK_P) {
-            if (gp.gameState == gp.playState) {
-                gp.gameState = gp.pauseState;
-            } else if (gp.gameState == gp.pauseState) {
-                gp.gameState = gp.playState;
-            }
-        }
-
-        //DEBUG
-        if (code == KeyEvent.VK_T) {
-            if (deBugCheckDrawTime == false) {
-                deBugCheckDrawTime = true;
-            } else if (deBugCheckDrawTime == true) {
-                deBugCheckDrawTime = false;
-            }
+            gp.gameState = gp.pauseState;
         }
     }
+
+        //DEBUG
+//        if (code == KeyEvent.VK_T) {
+//            if (deBugCheckDrawTime == false) {
+//                deBugCheckDrawTime = true;
+//            } else if (deBugCheckDrawTime == true) {
+//                deBugCheckDrawTime = false;
+//            }
+//        }
 
     @Override
     public void keyReleased(KeyEvent e) {

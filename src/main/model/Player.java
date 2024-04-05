@@ -62,8 +62,10 @@ public class Player extends Entities {
             collisionOn = false;
             gp.collisionCheck.checkTile(this);
 
-            int objectIndex = gp.collisionCheck.checkObject(this, true);
-            pickUpObject(objectIndex);
+            int objectIndex = gp.collisionCheck.checkObject(this, true, gp.objList);
+            pickUpObject(objectIndex, gp.objList);
+            int randObjectIndex = gp.collisionCheck.checkObject(this, true, gp.randItemList);
+            pickUpObject(randObjectIndex, gp.randItemList);
 
             int npcIndex = gp.collisionCheck.entityColCheck(this, gp.npc);
             interactNPC(npcIndex);
@@ -93,15 +95,15 @@ public class Player extends Entities {
     //MODIFIES: this (hasKey, gp.objList)
     //EFFECTS: Updates status of items on screen if character interacts (collides) with them. Removes, if
     // the conditions are met. Increments hasKey if item is a key, subtracts hasKey if item is a door.
-    public void pickUpObject (int i) {
+    public void pickUpObject (int i, ObjectSuper theList[]) {
         if (i != 999) {
-            ObjectSuper newItem = gp.objList[i];
-            String objectName = gp.objList[i].name;
+            ObjectSuper newItem = theList[i];
+            String objectName = theList[i].name;
 
             switch (objectName) {
                 case "Key":
                     gp.betterInv.addItem(newItem);
-                    gp.objList[i] = null;
+                    theList[i] = null;
 //                    gp.ui.showMessage("You got a key!");
                     break;
 //                case "Door":
@@ -115,11 +117,12 @@ public class Player extends Entities {
 //                    break;
                 case "Boots":
                     speed += 2;
-                    gp.objList[i] = null;
+                    theList[i] = null;
 //                    gp.ui.showMessage("You got new boots! Speed+2");
                     break;
                 case "Chest":
-                    gp.ui.gameDone = true;
+                    theList[i] = null;
+//                    gp.ui.gameDone = true;
                     break;
             }
         }

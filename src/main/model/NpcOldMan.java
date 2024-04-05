@@ -13,6 +13,8 @@ public class NpcOldMan extends Entities {
         speed = 1;
         getNPCImage();
         setDialogue();
+        line = 0;
+
     }
 
     //EFFECTS: gets the NPC sprite to display on screen
@@ -52,11 +54,17 @@ public class NpcOldMan extends Entities {
     }
 
     public void setDialogue () {
-        dialogue[0] = "shits and giggles";
+        dialogue[0] = "Would ya like to trade? (Y/N)";
+        dialogue[1] = "Buy a master Key for 3 normal keys? (Y/N)";
+        dialogue[2] = "You a broke boy now";
+        dialogue[3] = "You a broke bitch";
+    }
+
+    public void setLine(int i) {
+     line = 1;
     }
 
     public void speak() {
-        gp.ui.currentDialogue = dialogue[0];
-
+        gp.ui.currentDialogue = dialogue[line];
     }
 }

@@ -6,7 +6,6 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class ObjectKey extends ObjectSuper {
-
     GamePanel gp;
 
     public ObjectKey(GamePanel gp) {

@@ -32,12 +32,14 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionCheck collisionCheck = new CollisionCheck(this);
     public objectPlacer itemPlacer = new objectPlacer(this);
     public UI ui = new UI(this);
+    public Store store = new Store(this);
     Thread gameThread;
 
     // ENTITY AND OBJECTS/ITEMS
-    public BetterInv betterInv = new BetterInv();
+    public BetterInv betterInv = new BetterInv(this, keyH);
     public Player player = new Player(this, keyH);
     public ObjectSuper objList[] = new ObjectSuper[10];
+    public ObjectSuper randItemList[] = new ObjectSuper[11];
     public Entities npc[] = new Entities[10];
 
     //WORLD MAP SETTINGS
@@ -52,6 +54,10 @@ public class GamePanel extends JPanel implements Runnable {
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public final int inventoryState = 4;
+    public final int confirmSaveState = 5;
+    public final int confirmLoadState = 6;
+    public final int storeState = 7;
+
 
 
     public GamePanel() {
@@ -65,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setUpGame() {
         itemPlacer.setObjects();
         itemPlacer.setNPC();
+        itemPlacer.setRandItems();
 //        playMusic(0);
 //        stopMusic();
         gameState = playState;
@@ -142,6 +149,9 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == dialogueState) {
             //
         }
+        if (gameState == storeState) {
+            betterInv.updateInv();
+        }
     }
 
     // Built-in java class used to draw the scene
@@ -160,6 +170,14 @@ public class GamePanel extends JPanel implements Runnable {
                 objList[i].draw(g2, this);
             }
         }
+
+        //RANDOM ITEMS
+        for (int i = 0; i < randItemList.length; i++) {
+            if (randItemList[i] != null) {
+                randItemList[i].draw(g2, this);
+            }
+        }
+
         //NPC
         for (int i = 0; i < npc.length; i++) {
             if (npc[i] != null) {
@@ -167,6 +185,10 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         g2.dispose();
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
     }
 }
 

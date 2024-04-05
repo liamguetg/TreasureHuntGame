@@ -45,25 +45,42 @@ public class UI {
         if (gp.gameState == gp.dialogueState) {
             drawDialogueScreen();
         }
+        if (gp.gameState == gp.storeState) {
+            drawStoreStateScreen();
+        }
         if (gp.gameState == gp.inventoryState) {
             drawInventoryScreen();
+        }
+        if (gp.gameState == gp.confirmLoadState) {
+            drawLoadScreen();
+        }
+        if (gp.gameState == gp.confirmSaveState) {
+            drawSaveScreen();
         }
     }
 
     public void drawDialogueScreen() {
-        //WINDOW
-        int x = gp.tileSize * 2;
-        int y = gp.tileSize / 2;
-        int width = gp.screenWidth - (gp.tileSize * 4);
-        int height = gp.tileSize * 4;
-        makeWindow(x, y, width, height);
-
-        x += gp.tileSize;
-        y += gp.tileSize;
+        makeDialogueWindow();
+        int x = (gp.tileSize * 2) + gp.tileSize;
+        int y = (gp.tileSize / 2) + gp.tileSize;
         g2.drawString(currentDialogue, x, y);
     }
 
+    public void drawStoreStateScreen() {
+        makeDialogueWindow();
+        gp.npc[0].setLine(1);
+        gp.npc[0].speak();
+    }
+
     public void drawPauseScreen() {
+        drawPause();
+        g2.setFont(arial40);
+        int y = gp.screenHeight / 2;
+        g2.drawString("SAVE (S)", getXToCenterText("SAVE (S)"), (y + 100));
+        g2.drawString("LOAD (L)", getXToCenterText("LOAD (L)"), (y + 160));
+    }
+
+    public void drawPause() {
         g2.setFont(arial80);
         String text = "PAUSED";
         int y = gp.screenHeight / 2;
@@ -85,14 +102,25 @@ public class UI {
         int xHeader = getCenterTextWindow(text, width) + x;
         g2.drawString(text, xHeader, yHeader);
 
-        g2.setFont(arial40);
-        g2.setColor(Color.white);
         text = "Keys: " + String.valueOf(gp.betterInv.getNumKeys());
         x = width + gp.tileSize;
         y = yHeader + 48;
         g2.drawString(text, x, y);
 
+        text = "MasterKeys: " + String.valueOf(gp.betterInv.getNumMasterKeys());
+        y = yHeader + 48 + 48;
+        g2.drawString(text, x, y);
+    }
 
+
+    public void drawLoadScreen() {
+        drawWord40("Confirm Load (Y)", 0);
+        drawWord40("Cancel (N)", 1);
+    }
+
+    public void drawSaveScreen() {
+        drawWord40("Confirm Save (Y)", 0);
+        drawWord40("Cancel (N)", 1);
     }
 
     public void makeWindow(int x, int y, int width, int height) {
@@ -104,6 +132,14 @@ public class UI {
         BasicStroke bStroke = new BasicStroke(5);
         g2.setStroke(bStroke);
         g2.drawRoundRect(x, y, width, height, 20, 20);
+    }
+
+    public void makeDialogueWindow() {
+        int x = gp.tileSize * 2;
+        int y = gp.tileSize / 2;
+        int width = gp.screenWidth - (gp.tileSize * 4);
+        int height = gp.tileSize * 4;
+        makeWindow(x, y, width, height);
     }
 
     public int getXToCenterText(String text) {
@@ -118,6 +154,13 @@ public class UI {
         return x;
     }
 
+    //EFFECTS: Draws given word on given line with font arial40.
+    public void drawWord40(String word, int line) {
+        g2.setFont(arial40);
+        int y = gp.getScreenHeight() / 2 + (40 * line);
+        int x = getXToCenterText(word);
+        g2.drawString(word, x, y);
+    }
 }
 
 

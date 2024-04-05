@@ -24,10 +24,10 @@ public class ObjectSuper {
     ToolScaleImage scaleObject = new ToolScaleImage();
 
     //    EFFECTS: Sets the objects position on the map.
-    public void position(int x, int y) {
-        worldX = gp.tileSize * x;
-        worldY = gp.tileSize * y;
-    }
+//    public void position(int x, int y) {
+//        worldX = gp.tileSize * x;
+//        worldY = gp.tileSize * y;
+//    }
 
     public void draw(Graphics2D g2, GamePanel gp) {
 
