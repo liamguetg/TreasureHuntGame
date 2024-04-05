@@ -34,6 +34,10 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_A) {
             leftPressed = true;
         }
+        if (code == KeyEvent.VK_I) {
+            gp.gameState = gp.inventoryState;
+        }
+
         if (code == KeyEvent.VK_Q) {
             gp.gameState = gp.playState;
         }

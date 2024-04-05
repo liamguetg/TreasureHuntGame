@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 public class Player extends Entities {
 
     KeyHandler keyH;
+
     public final int screenX;
     public final int screenY;
 
@@ -94,27 +95,28 @@ public class Player extends Entities {
     // the conditions are met. Increments hasKey if item is a key, subtracts hasKey if item is a door.
     public void pickUpObject (int i) {
         if (i != 999) {
+            ObjectSuper newItem = gp.objList[i];
             String objectName = gp.objList[i].name;
 
             switch (objectName) {
                 case "Key":
-                    hasKey++;
+                    gp.betterInv.addItem(newItem);
                     gp.objList[i] = null;
-                    gp.ui.showMessage("You got a key!");
+//                    gp.ui.showMessage("You got a key!");
                     break;
-                case "Door":
-                    if(hasKey > 0) {
-                        gp.objList[i] = null;
-                        hasKey--;
-                        gp.ui.showMessage("You opened the door!");
-                    } else {
-                        gp.ui.showMessage("You need a key to open this door.");
-                    }
-                    break;
-                case "boots":
+//                case "Door":
+//                    if(hasKey > 0) {
+//                        gp.objList[i] = null;
+//                        hasKey--;
+//                        gp.ui.showMessage("You opened the door!");
+//                    } else {
+//                        gp.ui.showMessage("You need a key to open this door.");
+//                    }
+//                    break;
+                case "Boots":
                     speed += 2;
                     gp.objList[i] = null;
-                    gp.ui.showMessage("You got new boots! Speed+2");
+//                    gp.ui.showMessage("You got new boots! Speed+2");
                     break;
                 case "Chest":
                     gp.ui.gameDone = true;

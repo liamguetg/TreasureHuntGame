@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     // ENTITY AND OBJECTS/ITEMS
+    public BetterInv betterInv = new BetterInv();
     public Player player = new Player(this, keyH);
     public ObjectSuper objList[] = new ObjectSuper[10];
     public Entities npc[] = new Entities[10];
@@ -50,6 +51,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
+    public final int inventoryState = 4;
 
 
     public GamePanel() {
@@ -63,7 +65,6 @@ public class GamePanel extends JPanel implements Runnable {
     public void setUpGame() {
         itemPlacer.setObjects();
         itemPlacer.setNPC();
-
 //        playMusic(0);
 //        stopMusic();
         gameState = playState;
