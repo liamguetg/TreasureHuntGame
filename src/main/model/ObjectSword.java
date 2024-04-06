@@ -5,15 +5,15 @@ import ui.GamePanel;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class ObjectKey extends ObjectSuper {
+public class ObjectSword extends ObjectSuper {
     GamePanel gp;
 
-    public ObjectKey(GamePanel gp) {
+    public ObjectSword(GamePanel gp) {
         this.gp = gp;
-        name = "Key";
-        valuePerItem = 1;
+        name = "Sword";
+        valuePerItem = 3;
         try {
-            img = ImageIO.read(getClass().getResourceAsStream("/Items/key.png"));
+            img = ImageIO.read(getClass().getResourceAsStream("/Items/sword_normal.png"));
             scaleObject.scaleImage(img, gp.tileSize, gp.tileSize);
 
         } catch (IOException e) {

@@ -1,5 +1,8 @@
 package ui;
 
+import model.ObjectMasterKey;
+import model.ObjectSuper;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -39,8 +42,13 @@ public class KeyHandler implements KeyListener {
         if (gp.gameState == gp.dialogueState) {
             dialogueStateKeyHandler(e);
         }
-        if (gp.gameState == gp.storeState) {
-            storeStateKeyHandler(e);
+        if (gp.gameState == gp.buyState) {
+            buyStateKeyHandler(e);
+        }
+        if (gp.gameState == gp.buyFailState) {
+        }
+        if (gp.gameState == gp.tradeState) {
+            tradeStateKeyHandler(e);
         }
         if (code == KeyEvent.VK_Q) {
             gp.gameState = gp.playState;
@@ -82,24 +90,36 @@ public class KeyHandler implements KeyListener {
 
     public void dialogueStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_Y) {
-            gp.gameState = gp.storeState;
-
+        if (code == KeyEvent.VK_B) {
+            gp.gameState = gp.buyState;
         }
-        if (code == KeyEvent.VK_N) {
-            gp.gameState = gp.playState;
+        if (code == KeyEvent.VK_T) {
+            gp.gameState = gp.tradeState;
         }
     }
 
-    public void storeStateKeyHandler(KeyEvent e) {
+    public void tradeStateKeyHandler(KeyEvent e) {
+
+    }
+
+    public void buyStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
+        boolean purchased;
+
         if (code == KeyEvent.VK_Y) {
-            purchaseAttempt = true;
+            ObjectSuper masterKey = new ObjectMasterKey(gp);
+            purchased = gp.store.buyItem(masterKey, "Key", 3);
+            if (purchased) {
+                gp.gameState = gp.buyPassState;
+            } else {
+                gp.gameState = gp.buyFailState;
             }
+        }
         if (code == KeyEvent.VK_N) {
             gp.gameState = gp.playState;
         }
     }
+
 
 
     public void playStateKeyHandler(KeyEvent e) {
@@ -124,7 +144,7 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-        //DEBUG
+    //DEBUG
 //        if (code == KeyEvent.VK_T) {
 //            if (deBugCheckDrawTime == false) {
 //                deBugCheckDrawTime = true;
@@ -147,6 +167,18 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_A) {
             leftPressed = false;
+        }
+
+        if (gp.gameState == gp.buyState) {
+            if (code == KeyEvent.VK_Y) {
+                purchaseAttempt = false;
+            }
+        }
+
+        if (gp.gameState == gp.buyFailState) {
+            if (code == KeyEvent.VK_Y) {
+                purchaseAttempt = false;
+            }
         }
     }
 }

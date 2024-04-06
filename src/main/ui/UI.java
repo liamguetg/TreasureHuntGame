@@ -1,9 +1,11 @@
 package ui;
 
 import model.ObjectKey;
+import model.ObjectSuper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public class UI {
 
@@ -41,35 +43,104 @@ public class UI {
         }
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
+            drawExitOption();
         }
         if (gp.gameState == gp.dialogueState) {
             drawDialogueScreen();
+            drawExitOption();
         }
-        if (gp.gameState == gp.storeState) {
-            drawStoreStateScreen();
+        if (gp.gameState == gp.buyState) {
+            drawBuyStateScreen();
+            drawExitOption();
+        }
+        if (gp.gameState == gp.buyFailState) {
+            drawBuyFailState();
+        }
+        if (gp.gameState == gp.buyPassState) {
+            drawBuyPassState();
+        }
+        if (gp.gameState == gp.tradeState) {
+            drawSellStateScreen();
+            drawExitOption();
         }
         if (gp.gameState == gp.inventoryState) {
             drawInventoryScreen();
+            drawExitOption();
         }
         if (gp.gameState == gp.confirmLoadState) {
             drawLoadScreen();
+            drawExitOption();
         }
         if (gp.gameState == gp.confirmSaveState) {
             drawSaveScreen();
+            drawExitOption();
+        }
+        if (gp.gameState == gp.wonState) {
+            drawWonGameScreen();
         }
     }
 
     public void drawDialogueScreen() {
         makeDialogueWindow();
+        g2.setFont(arial40);
+        String text = "Would You like to:";
         int x = (gp.tileSize * 2) + gp.tileSize;
         int y = (gp.tileSize / 2) + gp.tileSize;
-        g2.drawString(currentDialogue, x, y);
+        g2.drawString(text, x, y);
+        text =  "Buy (B)";
+        y += 45;
+        g2.drawString(text, x, y);
+        y += 45;
+        text = "Trade (T)";
+        g2.drawString(text, x, y);
     }
 
-    public void drawStoreStateScreen() {
+    public void drawBuyStateScreen() {
         makeDialogueWindow();
-        gp.npc[0].setLine(1);
-        gp.npc[0].speak();
+        String text = "Buy a master Key for";
+        int x = (gp.tileSize * 2) + gp.tileSize;
+        int y = (gp.tileSize / 2) + gp.tileSize;
+        g2.drawString(text, x, y);
+        text = "3 normal keys? (Y/N)";
+        y += 45;
+        g2.drawString(text, x, y);
+    }
+
+    public void drawBuyFailState() {
+        makeDialogueWindow();
+
+        int x = (gp.tileSize * 2) + gp.tileSize;
+        int y = (gp.tileSize / 2) + gp.tileSize;
+        String text;
+        text = "You dont have the funds";
+        g2.drawString(text, x, y);
+    }
+
+    public void drawBuyPassState() {
+        makeDialogueWindow();
+        String text;
+        int x = (gp.tileSize * 2) + gp.tileSize;
+        int y = (gp.tileSize / 2) + gp.tileSize;
+        text = "You bought the key!";
+        g2.drawString(text, x, y);
+    }
+
+    public void drawSellStateScreen() {
+        makeDialogueWindow();
+        String text = "What would you like to sell?";
+        int x = (gp.tileSize * 2) + gp.tileSize;
+        int yHeader = (gp.tileSize / 2) + gp.tileSize;
+        g2.drawString(text, x, yHeader);
+
+        int row = 0;
+        for (Map.Entry<ObjectSuper, Integer> entry : gp.inventory.getInventory().entrySet()) {
+            text = entry.getKey().name;
+            x = (gp.tileSize * 2) + gp.tileSize;
+            int y = yHeader + ((1 + row) * (gp.tileSize + 2));
+
+            g2.drawString(text, x, y);
+            row++;
+        }
     }
 
     public void drawPauseScreen() {
@@ -102,16 +173,16 @@ public class UI {
         int xHeader = getCenterTextWindow(text, width) + x;
         g2.drawString(text, xHeader, yHeader);
 
-        text = "Keys: " + String.valueOf(gp.betterInv.getNumKeys());
-        x = width + gp.tileSize;
-        y = yHeader + 48;
-        g2.drawString(text, x, y);
+        int row = 0;
+        for (Map.Entry<ObjectSuper, Integer> entry : gp.inventory.getInventory().entrySet()) {
+            text = entry.getKey().name + ": " + entry.getValue().toString();
+            x = (gp.screenWidth / 3) + 20;
+            y = yHeader + ((1 + row) * (gp.tileSize + 2));
 
-        text = "MasterKeys: " + String.valueOf(gp.betterInv.getNumMasterKeys());
-        y = yHeader + 48 + 48;
-        g2.drawString(text, x, y);
+            g2.drawString(text, x, y);
+            row++;
+        }
     }
-
 
     public void drawLoadScreen() {
         drawWord40("Confirm Load (Y)", 0);
@@ -132,6 +203,14 @@ public class UI {
         BasicStroke bStroke = new BasicStroke(5);
         g2.setStroke(bStroke);
         g2.drawRoundRect(x, y, width, height, 20, 20);
+    }
+
+    public void drawExitOption() {
+        g2.setFont(arial20);
+        String text = "Press Q to return to game";
+        int y = gp.getScreenHeight() - 80;
+        int x = getXToCenterText(text);
+        g2.drawString(text, x, y);
     }
 
     public void makeDialogueWindow() {
@@ -160,6 +239,28 @@ public class UI {
         int y = gp.getScreenHeight() / 2 + (40 * line);
         int x = getXToCenterText(word);
         g2.drawString(word, x, y);
+    }
+
+    public void drawWonGameScreen() {
+        String text;
+        int textX;
+        int textY;
+        g2.setFont(arial80);
+        g2.setColor(Color.yellow);
+
+        text = "You bought a house!";
+        textX = getXToCenterText(text);
+        textY = gp.screenHeight / 2;
+        g2.drawString(text, textX, textY);
+
+        g2.setFont(arial40);
+        g2.setColor(Color.yellow);
+        text = "(in this economy!?)";
+        textX = getXToCenterText(text);
+        textY = gp.screenHeight / 2 - (gp.tileSize * 2);
+        g2.drawString(text, textX, textY);
+
+        gp.gameThread = null;
     }
 }
 

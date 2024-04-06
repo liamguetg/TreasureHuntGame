@@ -21,10 +21,10 @@ public class CollisionCheck {
     public void playerSolidArea(Entities entity) {
         //NOTE: add entity.entityWorld(S), ((S) = X or Y) to the respective places to deal with the visual
         // effect of the player running over things going down and not touching them going up.
-        entityLeftWorldX = entity.entityWorldX;
-        entityRightWorldX = entity.entityWorldX + entity.solidArea.width;
-        entityTopWorldY = entity.entityWorldY;
-        entityBottomWorldY = entity.entityWorldY + entity.solidArea.height;
+        entityLeftWorldX = entity.entityWorldX + entity.solidArea.x;
+        entityRightWorldX = entity.entityWorldX + entity.solidArea.width + entity.solidArea.x;
+        entityTopWorldY = entity.entityWorldY + entity.solidArea.y;
+        entityBottomWorldY = entity.entityWorldY + entity.solidArea.height + entity.solidArea.y;
 
         entityLeftCollisionCol = entityLeftWorldX / gp.tileSize;
         entityRightCollisionCol = entityRightWorldX / gp.tileSize;
@@ -74,74 +74,23 @@ public class CollisionCheck {
         }
     }
 
-//    public int checkObject(Entities entity, boolean player) {
-//        int index = 999;
-//        for (int i = 0; i < gp.objList.length; i++) {
-//
-//            if (gp.objList[i] != null) {
-//
-//                //get entities (players) solidArea position
-//                entity.solidArea.x = entity.entityWorldX + entity.solidArea.x;
-//                entity.solidArea.y = entity.entityWorldY + entity.solidArea.y;
-//
-//                //get objects solidArea
-//                gp.objList[i].solidArea.x = gp.objList[i].worldX + gp.objList[i].solidArea.x;
-//                gp.objList[i].solidArea.y = gp.objList[i].worldY + gp.objList[i].solidArea.y;
-//
-//                switch (entity.direction) {
-//                    case "up":
-//                        entity.solidArea.y -= entity.speed;
-//                        if (entity.solidArea.intersects(gp.objList[i].solidArea)) {
-//                            if (gp.objList[i].collision == true) {
-//                                entity.collisionOn = true;
-//                            }
-//                            if (player == true) {
-//                                index = i;
-//                            }
-//                        }
-//                        break;
-//                    case "down":
-//                        entity.solidArea.y += entity.speed;
-//                        if (entity.solidArea.intersects(gp.objList[i].solidArea)) {
-//                            if (gp.objList[i].collision == true) {
-//                                entity.collisionOn = true;
-//                            }
-//                            if (player == true) {
-//                                index = i;
-//                            }
-//                        }
-//                        break;
-//                    case "left":
-//                        entity.solidArea.x -= entity.speed;
-//                        if (entity.solidArea.intersects(gp.objList[i].solidArea)) {
-//                            if (gp.objList[i].collision == true) {
-//                                entity.collisionOn = true;
-//                            }
-//                            if (player == true) {
-//                                index = i;
-//                            }
-//                        }
-//                        break;
-//                    case "right":
-//                        entity.solidArea.x += entity.speed;
-//                        if (entity.solidArea.intersects(gp.objList[i].solidArea)) {
-//                            if (gp.objList[i].collision == true) {
-//                                entity.collisionOn = true;
-//                            }
-//                            if (player == true) {
-//                                index = i;
-//                            }
-//                        }
-//                        break;
-//                }
-//                entity.solidArea.x = entity.solidAreaDefaultX;
-//                entity.solidArea.y = entity.solidAreaDefaultY;
-//                gp.objList[i].solidArea.x = gp.objList[i].solidAreaDefaultX;
-//                gp.objList[i].solidArea.y = gp.objList[i].solidAreaDefaultY;
-//            }
-//        }
-//        return index;
-//    }
+    public void checkWinningTile(Entities entity) {
+        int playerX = entity.entityWorldX / gp.tileSize;
+        int playerY = entity.entityWorldY / gp.tileSize;
+
+        if (playerX == 10 && playerY == 11) {
+            gp.gameState = gp.wonState;
+        }
+    }
+
+//        int winningTile = gp.tileM.mapTileNum[10][11];
+//        int winningPos[][] = new int[gp.maxWorldCol][gp.maxWorldRow];
+//        int playerX = entity.entityWorldX / gp.tileSize;
+//        int playerY = entity.entityWorldY / gp.tileSize;
+//        int playerPos = winningPos[playerX][playerY];
+
+
+
 
     public int checkObject(Entities entity, boolean player, ObjectSuper theList[]) {
         int index = 999;
@@ -159,7 +108,7 @@ public class CollisionCheck {
 
                 switch (entity.direction) {
                     case "up":
-                        entity.solidArea.y -= entity.speed;
+                        entity.solidArea.y -= entity.speed - 2;
                         if (entity.solidArea.intersects(theList[i].solidArea)) {
                             if (theList[i].collision == true) {
                                 entity.collisionOn = true;
@@ -214,7 +163,7 @@ public class CollisionCheck {
 
     // EFFECTS: Checks if player is colliding with another entity.
     // If collision does NOT occur, the index returned is 999.
-    public int entityColCheck(Entities entity, Entities[] target) {
+    public int colPlayerEntCheck(Entities entity, Entities[] target) {
         int index = 999;
         for (int i = 0; i < target.length; i++) {
             if (target[i] != null) {
@@ -267,7 +216,7 @@ public class CollisionCheck {
         return index;
     }
 
-    public void colNpcHitPlayerCheck(Entities entity) {
+    public void colEntPlayerCheck(Entities entity) {
         entity.solidArea.x = entity.entityWorldX + entity.solidArea.x;
         entity.solidArea.y = entity.entityWorldY + entity.solidArea.y;
 
@@ -306,6 +255,10 @@ public class CollisionCheck {
         entity.solidArea.y = entity.solidAreaDefaultY;
         gp.player.solidArea.x = gp.player.solidAreaDefaultX;
         gp.player.solidArea.y = gp.player.solidAreaDefaultY;
+    }
+
+    public void resetEntitySA(Entities entity) {
+
     }
 }
 

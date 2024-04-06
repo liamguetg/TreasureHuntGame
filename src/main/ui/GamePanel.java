@@ -32,11 +32,11 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionCheck collisionCheck = new CollisionCheck(this);
     public objectPlacer itemPlacer = new objectPlacer(this);
     public UI ui = new UI(this);
-    public Store store = new Store(this);
+    public Store store = new Store(this, keyH);
     Thread gameThread;
 
     // ENTITY AND OBJECTS/ITEMS
-    public BetterInv betterInv = new BetterInv(this, keyH);
+    public Inventory inventory = new Inventory(this, keyH);
     public Player player = new Player(this, keyH);
     public ObjectSuper objList[] = new ObjectSuper[10];
     public ObjectSuper randItemList[] = new ObjectSuper[11];
@@ -56,7 +56,12 @@ public class GamePanel extends JPanel implements Runnable {
     public final int inventoryState = 4;
     public final int confirmSaveState = 5;
     public final int confirmLoadState = 6;
-    public final int storeState = 7;
+    public final int tradeState = 7;
+    public final int buyState = 8;
+    public final int buyFailState = 9;
+    public final int buyPassState = 10;
+    public final int wonState = 11;
+
 
 
 
@@ -149,8 +154,8 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == dialogueState) {
             //
         }
-        if (gameState == storeState) {
-            betterInv.updateInv();
+        if (gameState == buyState) {
+//            store.update();
         }
     }
 
@@ -162,7 +167,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         tileM.draw(g2);
         player.draw(g2);
-        ui.draw(g2);
 
         //ITEMS
         for (int i = 0; i < objList.length; i++) {
@@ -184,6 +188,7 @@ public class GamePanel extends JPanel implements Runnable {
                 npc[i].draw(g2);
             }
         }
+        ui.draw(g2);
         g2.dispose();
     }
 

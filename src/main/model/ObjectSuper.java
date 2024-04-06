@@ -13,6 +13,7 @@ public class ObjectSuper {
     public Boolean collision = false;
     public int worldX;
     public int worldY;
+    public int valuePerItem;
 
     public int solidAreaDefaultX = 0;
     public int solidAreaDefaultY = 0;
@@ -22,12 +23,6 @@ public class ObjectSuper {
             solidAreaDefaultWidth, solidAreaDefaultHeight); //0, 0, 48, 48
 
     ToolScaleImage scaleObject = new ToolScaleImage();
-
-    //    EFFECTS: Sets the objects position on the map.
-//    public void position(int x, int y) {
-//        worldX = gp.tileSize * x;
-//        worldY = gp.tileSize * y;
-//    }
 
     public void draw(Graphics2D g2, GamePanel gp) {
 

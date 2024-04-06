@@ -1,26 +1,44 @@
 package model;
 
+import ui.GamePanel;
+import ui.KeyHandler;
+
+import javax.swing.*;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 
 // Represents a players Inventory, with their picked up items;
 public class Inventory {
-    public LinkedList<SuperItems> inventory;
-    private Map<String, Integer> inventoryCount;
+    GamePanel gp;
+    KeyHandler keyH;
+    private final Map<ObjectSuper, Integer> inventory;
 
     //EFFECTS: constructs an instance of an inventory with no contents
-    public Inventory() {
-        inventory = new LinkedList<>();
-        inventoryCount = new HashMap<>();
+    public Inventory(GamePanel gp, KeyHandler keyH) {
+        this.gp = gp;
+        this.keyH = keyH;
+        inventory = new HashMap<>();
     }
 
-    // EFFECTS: returns the item in inventory whose name matches the new item.
-    public SuperItems getItemInInv(SuperItems newItem) {
-        for (SuperItems item : inventory) {
-            if (newItem.getItemName().equals(item.getItemName())) {
-                return item;
+    //EFFECTS: returns the item in inventory whose name matches the new item.
+    public ObjectSuper getItemInInv(ObjectSuper newItem) {
+        for (HashMap.Entry<ObjectSuper, Integer> entry : inventory.entrySet()) {
+            ObjectSuper key = entry.getKey();
+            String keyName = key.name;
+            if (keyName.equals(newItem.name)) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    public ObjectSuper getItemInInvWithName(String itemName) {
+        for (HashMap.Entry<ObjectSuper, Integer> entry : inventory.entrySet()) {
+            ObjectSuper key = entry.getKey();
+            String keyName = key.name;
+            if (keyName.equals(itemName)) {
+                return key;
             }
         }
         return null;
@@ -28,46 +46,92 @@ public class Inventory {
 
     //MODIFIED: this
     // EFFECTS: Adds a new item to the inventory, if item type is already owned, increase amount owned.
-    public void addToInventory(SuperItems newItem) {
+    public void addToInventory(ObjectSuper newItem) {
         if (getItemInInv(newItem) == null) {
-            inventory.add(newItem);
-            inventoryCount.put(newItem.getItemName(), 1);
+            inventory.put(newItem, 1);
         } else {
-            increaseAmountOfItem(newItem);
+            increaseAmountOfItem(getItemInInv(newItem));
         }
     }
 
     //MODIFIES: this
     //EFFECTS: increases the amount (value) of item in hashmap
-    public void increaseAmountOfItem(SuperItems item) {
-        String itemName = item.getItemName();
-        inventoryCount.put(itemName, inventoryCount.get(itemName) + 1);
+    public void increaseAmountOfItem(ObjectSuper item) {
+        int currentAmount = inventory.get(item);
+        int oneMore = currentAmount + 1;
+        inventory.put(item, oneMore);
     }
 
 
-    //REQUIRES: item is owned. amount to remove <= amount owned
-    //MODIFIES: this
-    //EFFECTS: removes item(s) from list
-    public void removeFromInventory(SuperItems itemToRemove, int amountToRemove) {
-        String itemToRemoveName = itemToRemove.getItemName();
-        int amountOfItemInInv = inventoryCount.get(itemToRemoveName);
-        int amountLeft = amountOfItemInInv - amountToRemove;
+    public boolean removeFromInventoryWithName(String itemToRemoveName, int amountToRemove) {
+        int amountOfItemInInv;
+        int amountLeft;
+        boolean gotFunds;
+        ObjectSuper itemInQuestion = getItemInInvWithName(itemToRemoveName);
 
-        if (amountLeft < 0) {
-            System.out.println("You don't have enough " + itemToRemoveName + "s");
-        } else if (amountLeft == 0) {
-            inventory.remove(getItemInInv(itemToRemove));
-            inventoryCount.remove(itemToRemoveName);
+        if (itemInQuestion == null) {
+            amountOfItemInInv = 0;
+            gotFunds = false;
+            System.out.println("You dont have any " + itemToRemoveName + " in your inventory.");
+            return gotFunds;
         } else {
-            inventoryCount.put(itemToRemoveName, amountLeft);
+            amountOfItemInInv = getAmountOfItemInInv(itemInQuestion);
+            amountLeft = amountOfItemInInv - amountToRemove;
+            if (amountLeft < 0) {
+                gotFunds = false;
+                System.out.println("You don't have enough " + itemToRemoveName + "s");
+                return gotFunds;
+            } else if (amountLeft == 0) {
+                inventory.remove(itemInQuestion);
+                gotFunds = true;
+                System.out.println("You got rid of all your " + itemToRemoveName);
+                return gotFunds;
+            } else {
+                inventory.put(itemInQuestion, amountLeft);
+                gotFunds = true;
+                System.out.println("You have " + amountLeft + " " + itemToRemoveName + "'s left.");
+                return gotFunds;
+            }
         }
     }
+
+    //MODIFIES: this
+    //EFFECTS: removes item(s) from list
+    public boolean removeFromInventory(ObjectSuper itemToRemove, int amountToRemove) {
+        String itemToRemoveName = itemToRemove.name;
+        int amountOfItemInInv;
+        int amountLeft;
+        boolean gotFunds;
+
+        if (!inventory.containsKey(itemToRemove)) {
+            amountOfItemInInv = 0;
+            gotFunds = false;
+            System.out.println("You dont have any " + itemToRemoveName + " in your inventory.");
+
+        } else {
+            amountOfItemInInv = inventory.get(itemToRemove);
+            amountLeft = amountOfItemInInv - amountToRemove;
+            if (amountLeft < 0) {
+                gotFunds = false;
+                System.out.println("You don't have enough " + itemToRemoveName + "s");
+            } else if (amountLeft == 0) {
+                inventory.remove(itemToRemove);
+                gotFunds = true;
+                System.out.println("You got rid of all your " + itemToRemoveName);
+            } else {
+                inventory.put(itemToRemove, amountLeft);
+                gotFunds = true;
+                System.out.println("You have " + amountLeft + " " + itemToRemoveName + "'s left.");
+            }
+        }
+        return gotFunds;
+    }
+
 
     //MODIFIES: this
     //EFFECTS: clears the inventory and resets the amount of each item to 0
     public void clearInventory() {
         inventory.clear();
-        inventoryCount.clear();
     }
 
     //EFFECTS: true if inventory is empty
@@ -75,26 +139,26 @@ public class Inventory {
         return inventory.size() == 0;
     }
 
-    //EFFECTS: true if inventoryCount is empty
-    public boolean inventoryCountEmpty() {
-        return inventoryCount.size() == 0;
-    }
-
     // GETTERS
 
-    // EFFECTS: returns the full inventory
-    public LinkedList<SuperItems> getInventory() {
+    public Map<ObjectSuper, Integer> getInventory() {
         return inventory;
     }
 
-    // REQUIRES: item is present in inventory.
-    // EFFECTS: gets the amount of an item in inventory
-    public int getAmountOfItemInInv(SuperItems itemInInv) {
+
+    public int getAmountOfItemInInvWithName(String itemInInvName) {
+        if (getItemInInvWithName(itemInInvName) == null) {
+            return 0;
+        } else {
+            return inventory.get(itemInInvName);
+        }
+    }
+
+    public int getAmountOfItemInInv(ObjectSuper itemInInv) {
         if (getItemInInv(itemInInv) == null) {
             return 0;
         } else {
-            String itemName = (getItemInInv(itemInInv)).getItemName();
-            return inventoryCount.get(itemName);
+            return inventory.get(itemInInv);
         }
     }
 
@@ -102,21 +166,29 @@ public class Inventory {
     public int getInventorySize() {
         return inventory.size();
     }
-    // EFFECTS: returns the number of items in inventory
-    public int getInventoryCountSize() {
-        return inventoryCount.size();
-    }
 
     // REQUIRES: item is present in inventory.
     // EFFECTS: gets the value of an item in inventory (value per item)
-    public int getValueOfItemInInv(SuperItems itemInInv) {
-        return itemInInv.getValuePerItem();
-//        return (inventory.get(inventory.indexOf(itemInInv))).getValuePerItem();
+    public int getValueOfItemInInv(ObjectSuper itemInInv) {
+        return itemInInv.valuePerItem;
     }
 
     // REQUIRES: item is present in inventory.
     // EFFECTS: gets the total value of an item in inventory (value of all the same items combined)
-    public int getTotValueOfItemInInv(SuperItems itemInInv) {
-        return getValueOfItemInInv(itemInInv) * inventoryCount.get(itemInInv.getItemName());
+    public int getTotValueOfItemInInv(ObjectSuper itemInInv) {
+        return getValueOfItemInInv(itemInInv) * getAmountOfItemInInv(itemInInv);
+    }
+
+    public JTable inventoryAsTable() {
+        JTable invAsTable = new JTable(inventory.size(), 2);
+        int row = 0;
+        for (Map.Entry<ObjectSuper, Integer> entry : inventory.entrySet()) {
+            invAsTable.setValueAt(entry.getKey().name, row, 0);
+            invAsTable.setValueAt(entry.getValue().toString(), row, 1);
+            row++;
+        }
+        return invAsTable;
     }
 }
+
+

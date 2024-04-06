@@ -67,8 +67,10 @@ public class Player extends Entities {
             int randObjectIndex = gp.collisionCheck.checkObject(this, true, gp.randItemList);
             pickUpObject(randObjectIndex, gp.randItemList);
 
-            int npcIndex = gp.collisionCheck.entityColCheck(this, gp.npc);
+            int npcIndex = gp.collisionCheck.colPlayerEntCheck(this, gp.npc);
             interactNPC(npcIndex);
+
+            gp.collisionCheck.checkWinningTile(this);
 
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (collisionOn == false) {
@@ -92,6 +94,15 @@ public class Player extends Entities {
         }
     }
 
+//    public void wonGame(Entities entity){
+//        int playerPos[][];
+//        int player
+//        playerPos = [entity.entityWorldX][entity.entityWorldY];
+//        int winningTile = gp.tileM.mapTileNum[gp.tileSize * 10][gp.tileSize * 12];
+//        int if (entity.collisionOn && (tileNum2 == winningTile || tileNum1 == winningTile)) {
+//        if
+//    }
+
     //MODIFIES: this (hasKey, gp.objList)
     //EFFECTS: Updates status of items on screen if character interacts (collides) with them. Removes, if
     // the conditions are met. Increments hasKey if item is a key, subtracts hasKey if item is a door.
@@ -102,7 +113,7 @@ public class Player extends Entities {
 
             switch (objectName) {
                 case "Key":
-                    gp.betterInv.addItem(newItem);
+                    gp.inventory.addToInventory(newItem);
                     theList[i] = null;
 //                    gp.ui.showMessage("You got a key!");
                     break;
@@ -115,12 +126,20 @@ public class Player extends Entities {
 //                        gp.ui.showMessage("You need a key to open this door.");
 //                    }
 //                    break;
+                case "Door":
+                    if (gp.inventory.getItemInInvWithName("Master Key") != null) {
+                        theList[i] = null;
+                        gp.inventory.removeFromInventoryWithName("Master Key", 1);
+                    }
+                    break;
                 case "Boots":
+                    gp.inventory.addToInventory(newItem);
                     speed += 2;
                     theList[i] = null;
 //                    gp.ui.showMessage("You got new boots! Speed+2");
                     break;
                 case "Chest":
+                    gp.inventory.addToInventory(newItem);
                     theList[i] = null;
 //                    gp.ui.gameDone = true;
                     break;

@@ -60,7 +60,7 @@ public class Entities {
         gp.collisionCheck.checkTile(this);
         gp.collisionCheck.checkObject(this, false, gp.objList);
         gp.collisionCheck.checkObject(this, false, gp.randItemList);
-        gp.collisionCheck.colNpcHitPlayerCheck(this);
+        gp.collisionCheck.colEntPlayerCheck(this);
 
         //IF COLLISION IS FALSE, PLAYER CAN MOVE
         if (collisionOn == false) {
