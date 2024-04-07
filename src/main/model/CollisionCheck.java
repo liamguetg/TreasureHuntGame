@@ -2,6 +2,10 @@ package model;
 
 import ui.GamePanel;
 
+import static java.lang.Math.floor;
+
+
+// Represents a collision checker to check if an entity will collide with an object, tile or another entity.
 public class CollisionCheck {
 
     GamePanel gp;
@@ -74,22 +78,13 @@ public class CollisionCheck {
         }
     }
 
-    public void checkWinningTile(Entities entity) {
-        int playerX = entity.entityWorldX / gp.tileSize;
-        int playerY = entity.entityWorldY / gp.tileSize;
-
-        if (playerX == 10 && playerY == 11) {
+    public void checkWon(Entities player) {
+        int playerX = (int) floor(player.entityWorldX / gp.tileSize);
+        int playerY = (int) floor(player.entityWorldY / gp.tileSize);
+        if (playerX == 10 && playerY == 9) {
             gp.gameState = gp.wonState;
         }
     }
-
-//        int winningTile = gp.tileM.mapTileNum[10][11];
-//        int winningPos[][] = new int[gp.maxWorldCol][gp.maxWorldRow];
-//        int playerX = entity.entityWorldX / gp.tileSize;
-//        int playerY = entity.entityWorldY / gp.tileSize;
-//        int playerPos = winningPos[playerX][playerY];
-
-
 
 
     public int checkObject(Entities entity, boolean player, ObjectSuper theList[]) {
@@ -103,12 +98,12 @@ public class CollisionCheck {
                 entity.solidArea.y = entity.entityWorldY;
 
                 //get objects solidArea
-                theList[i].solidArea.x = theList[i].worldX;
-                theList[i].solidArea.y = theList[i].worldY;
+                theList[i].solidArea.x += theList[i].worldX;
+                theList[i].solidArea.y += theList[i].worldY;
 
                 switch (entity.direction) {
                     case "up":
-                        entity.solidArea.y -= entity.speed - 2;
+                        entity.solidArea.y -= entity.speed;
                         if (entity.solidArea.intersects(theList[i].solidArea)) {
                             if (theList[i].collision == true) {
                                 entity.collisionOn = true;
@@ -152,8 +147,7 @@ public class CollisionCheck {
                         }
                         break;
                 }
-                entity.solidArea.x = entity.solidAreaDefaultX;
-                entity.solidArea.y = entity.solidAreaDefaultY;
+                resetEntitySA(entity);
                 theList[i].solidArea.x = theList[i].solidAreaDefaultX;
                 theList[i].solidArea.y = theList[i].solidAreaDefaultY;
             }
@@ -207,8 +201,7 @@ public class CollisionCheck {
                             break;
                         }
                 }
-                entity.solidArea.x = entity.solidAreaDefaultX;
-                entity.solidArea.y = entity.solidAreaDefaultY;
+                resetEntitySA(entity);
                 target[i].solidArea.x = target[i].solidAreaDefaultX;
                 target[i].solidArea.y = target[i].solidAreaDefaultY;
             }
@@ -251,14 +244,14 @@ public class CollisionCheck {
                 }
                 break;
         }
-        entity.solidArea.x = entity.solidAreaDefaultX;
-        entity.solidArea.y = entity.solidAreaDefaultY;
+        resetEntitySA(entity);
         gp.player.solidArea.x = gp.player.solidAreaDefaultX;
         gp.player.solidArea.y = gp.player.solidAreaDefaultY;
     }
 
     public void resetEntitySA(Entities entity) {
-
+        entity.solidArea.x = entity.solidAreaDefaultX;
+        entity.solidArea.y = entity.solidAreaDefaultY;
     }
 }
 

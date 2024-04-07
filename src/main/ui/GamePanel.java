@@ -61,8 +61,11 @@ public class GamePanel extends JPanel implements Runnable {
     public final int buyFailState = 9;
     public final int buyPassState = 10;
     public final int wonState = 11;
-
-
+    public final int confirmSellKeyState = 12;
+    public final int confirmSellBootsState = 13;
+    public final int confirmSellSwordState = 14;
+    public final int confirmSellShieldState = 15;
+    public final int confirmSellChestState = 16;
 
 
     public GamePanel() {
@@ -88,7 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     //EFFECTS: Calls the update and repaints functions (to Updates player information and update screen)
-    //         At each time interval (ie overy 0.0166 sec. to acheive 60FPS).
+    //         At each time interval (ie every 0.0166 sec. to achieve 60FPS).
     @Override
     public void run() {
         double drawInterval = (double) 1000000000 / FPS; // 0.0166 seconds/frame (or 60 FPS)
@@ -119,7 +122,6 @@ public class GamePanel extends JPanel implements Runnable {
                 timer = 0;
             }
 
-
 // Another method for making a game loop:
 //            try {
 //                double remainingTime = (nextDrawTime - System.nanoTime());
@@ -139,7 +141,28 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+//    public boolean slowerUpdate() {
+//        double updateInterval = (double) 1000000000 / 20; // 0.0166 seconds/frame (or 60 FPS)
+//        double delta = 0;
+//        long lastTime = System.nanoTime();
+//        long currentTime;
+//        boolean update = false;
+//
+//        while (gameThread != null) {
+//            currentTime = System.nanoTime();
+//            delta += (currentTime - lastTime) / updateInterval;
+//            lastTime = currentTime;
+//
+//            if (delta >= 1) {
+//                update = true;
+//                delta--;
+//            }
+//        }
+//        return update;
+//    }
+
     public void update() {
+        long lastProccessed = 0;
         if (gameState == playState) {
             player.update();
             for (int i = 0; i < npc.length; i++) {
@@ -157,7 +180,18 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == buyState) {
 //            store.update();
         }
+        if (gameState == tradeState) {
+            store.update();
+        }
+        if (gameState == confirmSellKeyState) {
+//            store.pickItemToSell();
+        }
     }
+
+
+//        if (gameState == confirmSellState) {
+//            store.confirmSale();
+//        }
 
     // Built-in java class used to draw the scene
     public void paintComponent(Graphics g) {

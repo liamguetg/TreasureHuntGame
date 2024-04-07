@@ -13,6 +13,7 @@ public class ObjectBoots extends ObjectSuper {
 
         this.gp = gp;
         name = "Boots";
+        valuePerItem = 10;
         try {
             img = ImageIO.read(getClass().getResourceAsStream("/Items/boots.png"));
             scaleObject.scaleImage(img, gp.tileSize, gp.tileSize);

@@ -1,16 +1,17 @@
 package model;
 
-
 import ui.GamePanel;
 import ui.KeyHandler;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+// Represents a player:
+// - Player is centered in the screen unless they are near the boarders of the world map.
+// - Player Sprite (image) changes with direction of movement.
+
 public class Player extends Entities {
-
     KeyHandler keyH;
-
     public final int screenX;
     public final int screenY;
 
@@ -70,7 +71,7 @@ public class Player extends Entities {
             int npcIndex = gp.collisionCheck.colPlayerEntCheck(this, gp.npc);
             interactNPC(npcIndex);
 
-            gp.collisionCheck.checkWinningTile(this);
+            gp.collisionCheck.checkWon(this);
 
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (collisionOn == false) {
@@ -142,6 +143,14 @@ public class Player extends Entities {
                     gp.inventory.addToInventory(newItem);
                     theList[i] = null;
 //                    gp.ui.gameDone = true;
+                    break;
+                case "Sword":
+                    gp.inventory.addToInventory(newItem);
+                    theList[i] = null;
+                    break;
+                case "Shield":
+                    gp.inventory.addToInventory(newItem);
+                    theList[i] = null;
                     break;
             }
         }

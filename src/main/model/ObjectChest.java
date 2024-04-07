@@ -12,8 +12,8 @@ public class ObjectChest extends ObjectSuper {
     public ObjectChest(GamePanel gp) {
 
         this.gp = gp;
-
         name = "Chest";
+        valuePerItem = 15;
         try {
             img = ImageIO.read(getClass().getResourceAsStream("/Items/chest.png"));
             scaleObject.scaleImage(img, gp.tileSize, gp.tileSize);

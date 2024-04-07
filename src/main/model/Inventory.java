@@ -33,6 +33,20 @@ public class Inventory {
         return null;
     }
 
+    //EFFECTS: checks if item with given name is in inventory.
+    public boolean haveItem(String itemName) {
+        boolean gotIt = false;
+        for (HashMap.Entry<ObjectSuper, Integer> entry : inventory.entrySet()) {
+            ObjectSuper key = entry.getKey();
+            String keyName = key.name;
+            if (keyName.equals(itemName)) {
+                gotIt = true;
+                return gotIt;
+            }
+        }
+        return gotIt;
+    }
+
     public ObjectSuper getItemInInvWithName(String itemName) {
         for (HashMap.Entry<ObjectSuper, Integer> entry : inventory.entrySet()) {
             ObjectSuper key = entry.getKey();
@@ -60,6 +74,12 @@ public class Inventory {
         int currentAmount = inventory.get(item);
         int oneMore = currentAmount + 1;
         inventory.put(item, oneMore);
+    }
+
+    public void increaseItemAmountBy(ObjectSuper item, int amountToAdd) {
+        int currentAmount = inventory.get(item);
+        int newAmount = currentAmount + amountToAdd;
+        inventory.put(item, newAmount);
     }
 
 
@@ -94,6 +114,44 @@ public class Inventory {
             }
         }
     }
+
+    public void addMany(ObjectSuper itemToAdd, int amount) {
+        String itemName = itemToAdd.name;
+        ObjectSuper itemInQuestion = getItemInInvWithName(itemName);
+        if (getItemInInv(itemToAdd) == null) {
+            inventory.put(itemToAdd, amount);
+        } else {
+            increaseItemAmountBy(itemInQuestion, amount);
+        }
+    }
+
+    public boolean removeOneFromInventoryWithName(String itemToRemoveName) {
+        int amountOfItemInInv;
+        int amountLeft;
+        boolean gotFunds;
+        ObjectSuper itemInQuestion = getItemInInvWithName(itemToRemoveName);
+
+        if (!haveItem(itemToRemoveName)) {
+            amountOfItemInInv = 0;
+            gotFunds = false;
+            System.out.println("You dont have any " + itemToRemoveName + " in your inventory.");
+        } else {
+            amountOfItemInInv = inventory.get(itemInQuestion);
+            amountLeft = amountOfItemInInv - 1;
+            if (amountLeft == 0) {
+                inventory.remove(itemInQuestion);
+                gotFunds = true;
+                System.out.println("You got rid of all your " + itemToRemoveName);
+            } else {
+                inventory.put(itemInQuestion, amountLeft);
+                gotFunds = true;
+                System.out.println("You have " + amountLeft + " " + itemToRemoveName + "'s left.");
+            }
+        }
+        return gotFunds;
+    }
+
+
 
     //MODIFIES: this
     //EFFECTS: removes item(s) from list
@@ -144,7 +202,6 @@ public class Inventory {
     public Map<ObjectSuper, Integer> getInventory() {
         return inventory;
     }
-
 
     public int getAmountOfItemInInvWithName(String itemInInvName) {
         if (getItemInInvWithName(itemInInvName) == null) {
