@@ -1,14 +1,9 @@
 package ui;
 
 import model.*;
-import org.json.JSONObject;
-import persistence.JsonReader;
-import persistence.JsonWriter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 // Creates the screen for the 2D game and runs the game thread (game loop).
 // - Frame specifications:
@@ -38,9 +33,9 @@ public class GamePanel extends JPanel implements Runnable {
     private Store store = new Store(this, keyH);
 
     // PERSISTENCE
-    private static final String JSON_STORE = "./data/gameTest.json";
-    private JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
-    private JsonReader jsonReader = new JsonReader(JSON_STORE, this);
+    // private static final String JSON_STORE = "./data/gameTest.json";
+    // private JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
+    // private JsonReader jsonReader = new JsonReader(JSON_STORE, this);
 
     Thread gameThread;
 
@@ -97,33 +92,6 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start(); // Automatically calls the run method
-    }
-
-    // MODIFIES: this
-    // EFFECTS: loads game from file
-    public void loadGame(JsonReader jsonReader) {
-        try {
-            jsonReader.parsePlayer(player);
-            inventory.clearInventory();
-            jsonReader.parseInv(inventory);
-            System.out.println("Loaded Game from " + JSON_STORE);
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
-        }
-    }
-
-    // MODIFIES: JSONfile?
-    // EFFECTS: Saves game as JSON file.
-    public void saveGame(JsonReader jsonReader) {
-        try {
-            getJsonWriter().open();
-            getJsonWriter().write(getInv(), getPlayer());
-            getJsonWriter().close();
-
-            System.out.println("Saved Game to " + getJsonStore());
-        } catch (FileNotFoundException f) {
-            System.out.println("Unable to write to file: " + getJsonStore());
-        }
     }
 
     // EFFECTS: Runs the game thread calling the update and draw functions for each
@@ -267,18 +235,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public Store getStore() {
         return store;
-    }
-
-    public JsonWriter getJsonWriter() {
-        return jsonWriter;
-    }
-
-    public String getJsonStore() {
-        return JSON_STORE;
-    }
-
-    public JsonReader getJsonReader() {
-        return jsonReader;
     }
 
     public GamePanel getGP() {

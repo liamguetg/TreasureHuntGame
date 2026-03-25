@@ -2,13 +2,13 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.*;
+// import org.junit.jupiter.api.*;
 
 import ui.GamePanel;
 import ui.KeyHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+// import java.util.HashMap;
+// import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,7 +75,6 @@ class InventoryTest {
         assertEquals(6, testInventory.getAmountOfItemInInv("Boots"));
         assertEquals(7, testInventory.getAmountOfItemInInv("Chest"));
     }
-
 
     @Test
     public void testRemoveItems() {

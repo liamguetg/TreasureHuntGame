@@ -18,7 +18,7 @@ public class TileManager {
     private Tile[] tile;
     private int[][] mapTileNum;
 
-    //EFFECTS: Constructor
+    // EFFECTS: Constructor
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tile = new Tile[10];
@@ -38,7 +38,8 @@ public class TileManager {
     }
 
     // MODIFIES: Tile
-    // EFFECTS: Retrieves and scales the images for each tile before entering the game loop.
+    // EFFECTS: Retrieves and scales the images for each tile before entering the
+    // game loop.
     public void setUpTile(int index, String imageName, boolean collision) {
         ToolScaleImage toolScaleImg = new ToolScaleImage();
         try {
@@ -51,8 +52,9 @@ public class TileManager {
         }
     }
 
-    //MODIFIES: this
-    //EFFECTS: Loads the tiles, indexing them as a 2D matrix, giving them a "position" on the world map.
+    // MODIFIES: this
+    // EFFECTS: Loads the tiles, indexing them as a 2D matrix, giving them a
+    // "position" on the world map.
     public void loadMap(String filePath) {
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -81,8 +83,8 @@ public class TileManager {
         }
     }
 
-    //MODIFIES: g2
-    //EFFECTS: Draws the game screen (the background) tiles.
+    // MODIFIES: g2
+    // EFFECTS: Draws the game screen (the background) tiles.
     public void draw(Graphics2D g2) {
 
         int worldCol = 0;
@@ -118,7 +120,7 @@ public class TileManager {
                 && worldY - gp.getTileSize() < gp.getPlayer().entityWorldY + gp.getPlayer().getScreenY();
     }
 
-    //GETTERS
+    // GETTERS
     public int[][] getMapTileNum() {
         return mapTileNum;
     }

@@ -1,12 +1,9 @@
 package ui;
 
-
 import model.ObjectMasterKey;
 import model.ObjectSuper;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-
 
 //Represents the keyHandlers for all the different gameStates; setting the keyBindings for each state and the
 // result fo pressing the keys.
@@ -25,18 +22,19 @@ public class KeyHandler implements KeyListener {
     private boolean sellChest;
     private boolean purchaseAttempt;
 
-    //EFFECTS: Constructor
+    // EFFECTS: Constructor
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
 
-    //EFFECTS: Built in method from the KeyListener class. Used to type something out.
+    // EFFECTS: Built in method from the KeyListener class. Used to type something
+    // out.
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
-
-    //EFFECTS: Built in method from the KeyListener class. Executes function when the keys are pressed.
+    // EFFECTS: Built in method from the KeyListener class. Executes function when
+    // the keys are pressed.
     @SuppressWarnings("methodlength")
     @Override
     public void keyPressed(KeyEvent e) {
@@ -46,10 +44,6 @@ public class KeyHandler implements KeyListener {
             playStateKeyHandler(e);
         } else if (gp.gameState == gp.pauseState) {
             pauseStateKeyHandler(e);
-        } else if (gp.gameState == gp.confirmSaveState) {
-            confirmSaveStateKeyHandler(e);
-        } else if (gp.gameState == gp.confirmLoadState) {
-            confirmLoadStateKeyHandler(e);
         } else if (gp.gameState == gp.dialogueState) {
             dialogueStateKeyHandler(e);
         } else if (gp.gameState == gp.buyState) {
@@ -74,8 +68,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState
-    //EFFECTS: Sets the key bindings for the paused state and the outcome if pressed.
+    // MODIFIES: gp.gameState
+    // EFFECTS: Sets the key bindings for the paused state and the outcome if
+    // pressed.
     public void pauseStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_S) {
@@ -89,34 +84,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState
-    //EFFECTS: Sets the key bindings for the confirmSave state and the outcome if pressed.
-    public void confirmSaveStateKeyHandler(KeyEvent e) {
-        int code = e.getKeyCode();
-        if (code == KeyEvent.VK_Y) {
-            gp.saveGame(gp.getJsonReader());
-            gp.gameState = gp.pauseState;
-        }
-        if (code == KeyEvent.VK_N) {
-            gp.gameState = gp.pauseState;
-        }
-    }
-
-    //MODIFIES: gp.gameState
-    //EFFECTS: Sets the key bindings for the confirmLoad state and the outcome if pressed.
-    public void confirmLoadStateKeyHandler(KeyEvent e) {
-        int code = e.getKeyCode();
-        if (code == KeyEvent.VK_Y) {
-            gp.loadGame(gp.getJsonReader());
-            gp.gameState = gp.playState;
-        }
-        if (code == KeyEvent.VK_N) {
-            gp.gameState = gp.pauseState;
-        }
-    }
-
-    //MODIFIES: gp.gameState
-    //EFFECTS: Sets the key bindings for the dialogue state and the outcome if pressed.
+    // MODIFIES: gp.gameState
+    // EFFECTS: Sets the key bindings for the dialogue state and the outcome if
+    // pressed.
     public void dialogueStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_B) {
@@ -127,8 +97,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the trade state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the trade state and the outcome if
+    // pressed.
     @SuppressWarnings("methodlength")
     public void tradeStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
@@ -159,8 +130,8 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: this
-    //EFFECTS: returns the sellItem booleans back to false (default);
+    // MODIFIES: this
+    // EFFECTS: returns the sellItem booleans back to false (default);
     public void returnSellItemToDefault() {
         sellKey = false;
         sellBoots = false;
@@ -169,9 +140,9 @@ public class KeyHandler implements KeyListener {
         sellChest = false;
     }
 
-
-    //MODIFIES: gp.gameState, gp.store
-    //EFFECTS: Sets the key bindings for the sellKey state and the outcome if pressed.
+    // MODIFIES: gp.gameState, gp.store
+    // EFFECTS: Sets the key bindings for the sellKey state and the outcome if
+    // pressed.
     public void confirmSellKeyStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_Y) {
@@ -183,8 +154,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the sellBoots state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the sellBoots state and the outcome if
+    // pressed.
     public void confirmSellBootsStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_Y) {
@@ -196,9 +168,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-
-    //MODIFIES: gp.gameState
-    //EFFECTS: Sets the key bindings for the inventory state and the outcome if pressed.
+    // MODIFIES: gp.gameState
+    // EFFECTS: Sets the key bindings for the inventory state and the outcome if
+    // pressed.
     public void inventoryStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_I) {
@@ -206,8 +178,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the sellSword state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the sellSword state and the outcome if
+    // pressed.
     public void confirmSellSwordStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_Y) {
@@ -219,8 +192,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the sellShield state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the sellShield state and the outcome if
+    // pressed.
     public void confirmSellShieldStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_Y) {
@@ -232,8 +206,9 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the sellChest state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the sellChest state and the outcome if
+    // pressed.
     public void confirmSellChestStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_Y) {
@@ -245,8 +220,8 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the buy state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the buy state and the outcome if pressed.
     public void buyStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         boolean purchased;
@@ -265,8 +240,8 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    //MODIFIES: gp.gameState, this
-    //EFFECTS: Sets the key bindings for the play state and the outcome if pressed.
+    // MODIFIES: gp.gameState, this
+    // EFFECTS: Sets the key bindings for the play state and the outcome if pressed.
     public void playStateKeyHandler(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_S) {
@@ -289,8 +264,8 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-
-    //EFFECTS: Built in method from the KeyListener class. Executes function when the keys are released.
+    // EFFECTS: Built in method from the KeyListener class. Executes function when
+    // the keys are released.
     @SuppressWarnings("methodlength")
     @Override
     public void keyReleased(KeyEvent e) {
@@ -339,8 +314,7 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-
-    //GETTERS:
+    // GETTERS:
     public boolean getDownPressed() {
         return downPressed;
     }
