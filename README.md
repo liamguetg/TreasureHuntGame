@@ -99,6 +99,8 @@ A top-down, tile-based adventure game built in Java using Swing/AWT. The project
 
 ## Gameplay controls
 
+
+- Note: may nedd to hit 'tab' to start
 - Move: `W` `A` `S` `D`
 - Open inventory: `I`
 - Pause menu: `P`

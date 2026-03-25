@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -19,8 +18,8 @@ import java.io.IOException;
 // * Frame is refreshed at 60 FPS
 public class GamePanel extends JPanel implements Runnable {
 
-    //SCREEN SETTINGS:
-    final int originalTileSize = 16; //16x16 title
+    // SCREEN SETTINGS:
+    final int originalTileSize = 16; // 16x16 title
     final int scale = 3;
     private final int tileSize = originalTileSize * scale; // 48 pixels
     private final int maxScreenColTiles = 12;
@@ -38,27 +37,25 @@ public class GamePanel extends JPanel implements Runnable {
     private UI ui = new UI(this);
     private Store store = new Store(this, keyH);
 
-    //PERSISTENCE
+    // PERSISTENCE
     private static final String JSON_STORE = "./data/gameTest.json";
     private JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
     private JsonReader jsonReader = new JsonReader(JSON_STORE, this);
-
 
     Thread gameThread;
 
     // ENTITY AND OBJECTS/ITEMS
     private Inventory inventory = new Inventory(this, keyH);
     private Player player = new Player(this, keyH);
-    private ObjectSuper[] objList  = new ObjectSuper[10];
+    private ObjectSuper[] objList = new ObjectSuper[10];
     private ObjectSuper[] randItemList = new ObjectSuper[11];
     private Entities[] npcList = new Entities[10];
 
-
-    //WORLD MAP SETTINGS
+    // WORLD MAP SETTINGS
     private final int maxWorldCol = 50;
     private final int maxWorldRow = 50;
 
-    //GAME STATES
+    // GAME STATES
     protected int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
@@ -77,8 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int confirmSellShieldState = 15;
     public final int confirmSellChestState = 16;
 
-
-    //EFFECTS: Constructor
+    // EFFECTS: Constructor
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
@@ -87,8 +83,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
-    //MODIFIES: this
-    //EFFECTS: Sets up the start of the game
+    // MODIFIES: this
+    // EFFECTS: Sets up the start of the game
     public void setUpGame() {
         itemPlacer.setObjects();
         itemPlacer.setNPC();
@@ -97,15 +93,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
-    //EFFECTS: Starts the game thread (and runs it)
+    // EFFECTS: Starts the game thread (and runs it)
     public void startGameThread() {
         gameThread = new Thread(this);
-        gameThread.start(); //Automatically calls the run method
+        gameThread.start(); // Automatically calls the run method
     }
 
-
-//     MODIFIES: this
-//     EFFECTS: loads game from file
+    // MODIFIES: this
+    // EFFECTS: loads game from file
     public void loadGame(JsonReader jsonReader) {
         try {
             jsonReader.parsePlayer(player);
@@ -117,9 +112,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-
-    //MODIFIES: JSONfile?
-    //EFFECTS: Saves game as JSON file.
+    // MODIFIES: JSONfile?
+    // EFFECTS: Saves game as JSON file.
     public void saveGame(JsonReader jsonReader) {
         try {
             getJsonWriter().open();
@@ -132,9 +126,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-
-    //EFFECTS: Runs the game thread calling the update and draw functions for each part of the game.
-    // Calculates when to update and redraw the screen (every 0.0166 sec. to achieve 60FPS).
+    // EFFECTS: Runs the game thread calling the update and draw functions for each
+    // part of the game.
+    // Calculates when to update and redraw the screen (every 0.0166 sec. to achieve
+    // 60FPS).
     @Override
     public void run() {
         double drawInterval = (double) 1000000000 / fps; // 0.0166 seconds/frame (or 60 FPS)
@@ -155,7 +150,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //EFFECTS: Updates what is drawn on the screen depending on the gameState.
+    // EFFECTS: Updates what is drawn on the screen depending on the gameState.
     public void update() {
         if (gameState == playState) {
             player.update();
@@ -173,60 +168,46 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-
-    //EFFECTS: Built-in java subclass used to draw the screen graphics (Tiles, entities and objects)
+    // EFFECTS: Built-in java subclass used to draw the screen graphics (Tiles,
+    // entities and objects)
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        //TILES
+        // TILES
         tileM.draw(g2);
-        //PLAYER
+        // PLAYER
         player.draw(g2);
-        //OBJECTS
+        // OBJECTS
         for (int i = 0; i < objList.length; i++) {
             if (objList[i] != null) {
                 objList[i].draw(g2, this);
             }
         }
-        //RANDOM ITEMS
+        // RANDOM ITEMS
         for (int i = 0; i < randItemList.length; i++) {
             if (randItemList[i] != null) {
                 randItemList[i].draw(g2, this);
             }
         }
-        //ENTITIES
+        // ENTITIES
         for (int i = 0; i < npcList.length; i++) {
             if (npcList[i] != null) {
                 npcList[i].draw(g2);
             }
         }
-        //UI
+        // UI
         ui.draw(g2);
         g2.dispose();
     }
 
-    //MODIFIES: this
-    //EFFECTS: Changes the gameState
+    // MODIFIES: this
+    // EFFECTS: Changes the gameState
     public void setGameState(int newState) {
         gameState = newState;
     }
 
-
-//    //MODIFIES: this
-//    //EFFECTS: Sets the inventory to the saved inventory
-//    public void setInventory(Inventory savedInv) {
-//        inventory = savedInv;
-//    }
-//
-//    //MODIFIES: this
-//    //EFFECTS: Sets the player to the saved player
-//    public void setPlayer(Player savedPlayer) {
-//        player = savedPlayer;
-//    }
-
-
-    //GETTERS
+    // GETTERS
 
     public int getLength(ObjectSuper[] sucker) {
         return sucker.length;
@@ -304,4 +285,3 @@ public class GamePanel extends JPanel implements Runnable {
         return this;
     }
 }
-
