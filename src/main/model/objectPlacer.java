@@ -4,56 +4,66 @@ import ui.GamePanel;
 
 import java.util.Random;
 
-public class objectPlacer {
+//Places objects, items and entities (NPC) on the map
+public class ObjectPlacer {
 
     GamePanel gp;
-    Random randTile = new Random();
-    Random randItem = new Random();
+    private Random randTile = new Random();
+    private Random randItem = new Random();
 
-    public objectPlacer(GamePanel gp) {
+    //EFFECTS: Constructor
+    public ObjectPlacer(GamePanel gp) {
         this.gp = gp;
     }
 
+    //MODIFIES: this
+    //EFFECTS: Randomly assigns and places Items on the map.
+    @SuppressWarnings("methodlength")
     public void setRandItems() {
+        ObjectSuper[] randItemList = gp.getRandItemList();
         int numItemsOnMap = 0;
+
         while (numItemsOnMap < 10) {
-            int xCord = randTile.nextInt(gp.maxWorldCol);
-            int yCord = randTile.nextInt(gp.maxWorldRow);
-            int tileNum1 = gp.tileM.mapTileNum[xCord][yCord];
+            int xcord = randTile.nextInt(gp.getMaxWorldCol());
+            int ycord = randTile.nextInt(gp.getMaxWorldRow());
+            int tileNum1 = gp.getTileManaged().getMapTileNum()[xcord][ycord];
             int item = randItem.nextInt(100);
-            if (gp.tileM.tile[tileNum1].collision == false) {
+            if (!gp.getTileManaged().getTile()[tileNum1].collision) {
                 if (item <= 50) {
-                    gp.randItemList[numItemsOnMap] = new ObjectKey(gp);
+                    randItemList[numItemsOnMap] = new ObjectKey(gp);
                 }
                 if (item > 50 && item <= 65) {
-                    gp.randItemList[numItemsOnMap] = new ObjectSword(gp);
+                    randItemList[numItemsOnMap] = new ObjectSword(gp);
                 }
                 if (item > 65 && item <= 80) {
-                    gp.randItemList[numItemsOnMap] = new ObjectShield(gp);
+                    randItemList[numItemsOnMap] = new ObjectShield(gp);
                 }
                 if (item > 80 && item <= 95) {
-                    gp.randItemList[numItemsOnMap] = new ObjectBoots(gp);
+                    randItemList[numItemsOnMap] = new ObjectBoots(gp);
                 }
                 if (item > 95) {
-                    gp.randItemList[numItemsOnMap] = new ObjectChest(gp);
+                    randItemList[numItemsOnMap] = new ObjectChest(gp);
                 }
-                gp.randItemList[numItemsOnMap].worldX = gp.tileSize * xCord;
-                gp.randItemList[numItemsOnMap].worldY = gp.tileSize * yCord;
+                randItemList[numItemsOnMap].worldX = gp.getTileSize() * xcord;
+                randItemList[numItemsOnMap].worldY = gp.getTileSize() * ycord;
                 numItemsOnMap++;
             }
         }
     }
 
+    //EFFECTS: Places the given list of objects on the map.
     public void setObjects() {
-        gp.objList[0] = new ObjectDoor(gp);
-        gp.objList[0].worldX = gp.tileSize * 10;
-        gp.objList[0].worldY = gp.tileSize * 11;
+        ObjectSuper[] objList = gp.getObjList();
+        objList[0] = new ObjectDoor(gp);
+        objList[0].worldX = gp.getTileSize() * 10;
+        objList[0].worldY = gp.getTileSize() * 11;
     }
 
-    public void setNPC(){
-        //Old Man NPC
-        gp.npc[0] = new NpcOldMan(gp);
-        gp.npc[0].entityWorldX = gp.tileSize*21;
-        gp.npc[0].entityWorldY = gp.tileSize*21;
+    //EFFECTS: Places the given list of entities on the map.
+    public void setNPC() {
+        Entities[] npc = gp.getNpcList();
+        npc[0] = new NpcSalesMan(gp);
+        npc[0].entityWorldX = gp.getTileSize() * 21;
+        npc[0].entityWorldY = gp.getTileSize() * 21;
     }
 }

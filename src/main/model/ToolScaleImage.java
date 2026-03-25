@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 
 public class ToolScaleImage {
 
+    //EFFECTS: Constructor
     public BufferedImage scaleImage(BufferedImage original, int width, int height) {
 
         BufferedImage scaledImage = new BufferedImage(width, height, original.getType());

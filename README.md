@@ -169,3 +169,8 @@ This project helped me practice:
 - Using a state machine (`gameState`) to coordinate UI screens with player actions.
 - Building inventory and shop/trade logic that is approachable to extend (new item types and rules).
 
+
+##
+
+java -cp "out/production/210-Project-Starter2:lib/spec/json-20210307.jar" ui.Main
+

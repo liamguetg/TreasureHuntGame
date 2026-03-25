@@ -4,21 +4,21 @@ import ui.GamePanel;
 
 import java.util.Random;
 
-public class NpcOldMan extends Entities {
+//Represents the NPC that runs the store. Has a movement speed, random direction setter and
+// associated images.
 
-    public NpcOldMan(GamePanel gp) {
+public class NpcSalesMan extends Entities {
+
+    public NpcSalesMan(GamePanel gp) {
         super(gp);
 
         direction = "down";
         speed = 1;
-        getNPCImage();
-        setDialogue();
-        line = 0;
-
+        getNpcImage();
     }
 
     //EFFECTS: gets the NPC sprite to display on screen
-    public void getNPCImage() {
+    public void getNpcImage() {
         up1 = setUpEntityTile("/npcSprites/oldman_up1");
         up2 = setUpEntityTile("/npcSprites/oldman_up2");
         down1 = setUpEntityTile("/npcSprites/oldman_down1");
@@ -29,11 +29,12 @@ public class NpcOldMan extends Entities {
         left2 = setUpEntityTile("/npcSprites/oldman_left2");
     }
 
+    //MODIFIES: this
+    //EFFECTS: Randomly assigns a direction for the NPCs movement.
     public void movement() {
-
         newMoveCounter++;
-        if (newMoveCounter == 120) {
 
+        if (newMoveCounter == 120) {
             Random random = new Random();
             int i = random.nextInt(4) + 1;
 
@@ -51,20 +52,5 @@ public class NpcOldMan extends Entities {
             }
             newMoveCounter = 0;
         }
-    }
-
-    public void setDialogue () {
-        dialogue[0] = "Would ya like to trade? (Y/N)";
-        dialogue[1] = "Buy a master Key for 3 normal keys? (Y/N)";
-        dialogue[2] = "You a broke boy now";
-        dialogue[3] = "You a broke bitch";
-    }
-
-    public void setLine(int i) {
-     line = 1;
-    }
-
-    public void speak() {
-        gp.ui.currentDialogue = dialogue[line];
     }
 }

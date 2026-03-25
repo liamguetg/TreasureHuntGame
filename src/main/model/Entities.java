@@ -7,72 +7,77 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+// Represents a Super class for entities (NPC or player) with a position (X and Y coordinates),
+// movement speed, direction, a solid area (Hit-box) and associated images.
 
 public class Entities {
     GamePanel gp;
 
-    public int entityWorldX;
-    public int entityWorldY;
-    public int speed;
-    public int newMoveCounter;
+    //POSITION ON MAP
+    protected int entityWorldX;
+    protected int entityWorldY;
 
-    public BufferedImage up1;
-    public BufferedImage up2;
-    public BufferedImage down1;
-    public BufferedImage down2;
-    public BufferedImage left1;
-    public BufferedImage left2;
-    public BufferedImage right1;
-    public BufferedImage right2;
+    //COLLISION PARAMETERS (SA)
+    protected Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+    protected int solidAreaDefaultX;
+    protected int solidAreaDefaultY;
+    protected Boolean collisionOn = false;
 
-    public String direction;
-    public int spriteCounter = 0;
-    public int spriteNum = 1;
-    int line;
+    //MOVEMENT TRACKERS
+    protected int speed;
+    protected String direction;
+    protected int spriteCounter = 0;
+    protected int spriteNum = 1;
+    protected int newMoveCounter;
 
-    /*
-     solidArea field is to create the part of the entity which is solid (cannot pass through other solid objects)
-     Since making the whole entity (the entire tile it takes up) solid causes collisions to be too
-     frequent/annoying, the solidArea is made to be smaller than a tile.
-    */
-    public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
-    public int solidAreaDefaultX;
-    public int solidAreaDefaultY;
-    public int solidAreaDefaultWidth;
-    public int solidAreaDefaultHeight;
-    public Boolean collisionOn = false;
-    public String[] dialogue = new String[20];
+    //SPRITE IMAGES
+    protected BufferedImage up1;
+    protected BufferedImage up2;
+    protected BufferedImage down1;
+    protected BufferedImage down2;
+    protected BufferedImage left1;
+    protected BufferedImage left2;
+    protected BufferedImage right1;
+    protected BufferedImage right2;
 
+    //EFFECTS: Constructor
     public Entities(GamePanel gp) {
         this.gp = gp;
     }
 
-    public void movement() {}
+    //EFFECTS: Characterizes the movement of the specific entity
+    public void movement() {
+    }
 
-    public void setLine(int i) {}
-    public void speak() {}
-
+    //EFFECTS: Updates the position and image of the entity on the map.
+    @SuppressWarnings("methodlength")
     public void update() {
-        //NPC movement is characterized for each NPC (in the subclass)
         movement();
-
-        // COLLISION CHECKS
+        //COLLISION CHECKS
         collisionOn = false;
-        gp.collisionCheck.checkTile(this);
-        gp.collisionCheck.checkObject(this, false, gp.objList);
-        gp.collisionCheck.checkObject(this, false, gp.randItemList);
-        gp.collisionCheck.colEntPlayerCheck(this);
+        gp.getColCheck().checkTile(this);
+        gp.getColCheck().checkObject(this, false, gp.getObjList());
+        gp.getColCheck().checkObject(this, false, gp.getRandItemList());
+        gp.getColCheck().colEntPlayerCheck(this);
 
-        //IF COLLISION IS FALSE, PLAYER CAN MOVE
-        if (collisionOn == false) {
-            switch (direction){
-                case "up": entityWorldY -= speed; break;
-                case "down": entityWorldY += speed; break;
-                case "left": entityWorldX -= speed; break;
-                case "right": entityWorldX += speed; break;
+        if (!collisionOn) {
+            switch (direction) {
+                case "up":
+                    entityWorldY -= speed;
+                    break;
+                case "down":
+                    entityWorldY += speed;
+                    break;
+                case "left":
+                    entityWorldX -= speed;
+                    break;
+                case "right":
+                    entityWorldX += speed;
+                    break;
             }
         }
 
+        //MOVEMENT COUNTER
         spriteCounter++;
         if (spriteCounter > 10) {
             if (spriteNum == 1) {
@@ -84,18 +89,17 @@ public class Entities {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Draws the entity on the screen (if not onscreen it is not drawn).
+    @SuppressWarnings("methodlength")
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
 
-        int screenX = entityWorldX - gp.player.entityWorldX + gp.player.screenX;
-        int screenY = entityWorldY - gp.player.entityWorldY + gp.player.screenY;
+        int screenX = entityWorldX - gp.getPlayer().entityWorldX + gp.getPlayer().getScreenX();
+        int screenY = entityWorldY - gp.getPlayer().entityWorldY + gp.getPlayer().getScreenY();
 
-        // if statement so we only draws the necessary tiles (the tiles surrounding the player)
-        if (    entityWorldX + gp.tileSize > gp.player.entityWorldX - gp.player.screenX &&
-                entityWorldX - gp.tileSize < gp.player.entityWorldX + gp.player.screenX &&
-                entityWorldY + gp.tileSize > gp.player.entityWorldY - gp.player.screenY &&
-                entityWorldY - gp.tileSize < gp.player.entityWorldY + gp.player.screenY) {
-
+        //ENSURES ONLY VISIBLE (ON SCREEN) SPRITES DRAWN:
+        if (onScreen()) {
             switch (direction) {
                 case "up":
                     if (spriteNum == 1) {
@@ -130,18 +134,27 @@ public class Entities {
                     }
                     break;
             }
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
         }
     }
 
+    //EFFECTS: Checks if the entity is on screen.
+    public boolean onScreen() {
+        return entityWorldX + gp.getTileSize() > gp.getPlayer().entityWorldX - gp.getPlayer().getScreenX()
+                && entityWorldX - gp.getTileSize() < gp.getPlayer().entityWorldX + gp.getPlayer().getScreenX()
+                && entityWorldY + gp.getTileSize() > gp.getPlayer().entityWorldY - gp.getPlayer().getScreenY()
+                && entityWorldY - gp.getTileSize() < gp.getPlayer().entityWorldY + gp.getPlayer().getScreenY();
+    }
 
+    //MODIFIES: this.
+    //EFFECTS: Retrieves and scales the Entities image.
     public BufferedImage setUpEntityTile(String imagePath) {
         ToolScaleImage scalePlayerTile = new ToolScaleImage();
         BufferedImage image = null;
 
         try {
             image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-            image = scalePlayerTile.scaleImage(image, gp.tileSize, gp.tileSize);
+            image = scalePlayerTile.scaleImage(image, gp.getTileSize(), gp.getTileSize());
         } catch (IOException e) {
             e.printStackTrace();
         }

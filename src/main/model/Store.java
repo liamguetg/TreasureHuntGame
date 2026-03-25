@@ -3,166 +3,72 @@ package model;
 import ui.GamePanel;
 import ui.KeyHandler;
 
+//Represents the store class, can buy items with coin and sell items in inventory for coins.
 public class Store {
     GamePanel gp;
     KeyHandler keyH;
 
+    //EFFECTS: Constructor
     public Store(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
     }
 
+    //MODIFIES: gameState
+    //EFFECTS: Updates the storeState based on what item player chose to sell.
     public void update() {
         if (keyH.getSellKey() || keyH.getSellShield()
                 || keyH.getSellSword() || keyH.getSellChest() || keyH.getSellBoots()) {
             if (keyH.getSellKey()) {
-                gp.gameState = gp.confirmSellKeyState;
+                gp.setGameState(gp.confirmSellKeyState);
             } else if (keyH.getSellShield()) {
-                gp.gameState = gp.confirmSellShieldState;
+                gp.setGameState(gp.confirmSellShieldState);
             } else if (keyH.getSellSword()) {
-                gp.gameState = gp.confirmSellSwordState;
+                gp.setGameState(gp.confirmSellSwordState);
             } else if (keyH.getSellChest()) {
-                gp.gameState = gp.confirmSellChestState;
+                gp.setGameState(gp.confirmSellChestState);
             } else if (keyH.getSellBoots()) {
-                gp.gameState = gp.confirmSellBootsState;
+                gp.setGameState(gp.confirmSellBootsState);
             }
         }
+        keyH.returnSellItemToDefault();
     }
 
-    public void confirmSellItem(String itemName){
-        if (keyH.getSellConfirmed()) {
-            sellItem(itemName);
-        }
-    }
-
+    //MODIFIES: inventory
+    //EFFECTS: "Buys" an item by adding to inventory and removing the corresponding price (amount of coins).
     public boolean buyItem(ObjectSuper itemToGet, String itemToTradeName, int amountNeeded) {
         boolean gotFunds;
         boolean purchased = false;
-        ObjectSuper itemToTrade = gp.inventory.getItemInInvWithName(itemToTradeName);
+        ObjectSuper itemToTrade = gp.getInv().getItemInInv(itemToTradeName);
 
         if (itemToTrade != null) {
-            gotFunds = gp.inventory.removeFromInventory(itemToTrade, amountNeeded);
+            gotFunds = gp.getInv().removeItemFromInv(itemToTradeName, amountNeeded);
             if (gotFunds) {
-                gp.inventory.addToInventory(itemToGet);
-                gp.inventory.removeFromInventory(itemToTrade, amountNeeded);
+                gp.getInv().addToInv(itemToGet, 1);
+                gp.getInv().removeItemFromInv(itemToTradeName, amountNeeded);
                 purchased = true;
-                return purchased;
-            } else if (!gotFunds) {
-                System.out.println("that shit didnt work broke boy");
-                purchased = false;
                 return purchased;
             }
         }
         return purchased;
     }
 
-    public void pickItemToSell() {
-        String itemToSell = "";
-        if (keyH.getSellKey() || keyH.getSellShield()
-                || keyH.getSellSword() || keyH.getSellChest() || keyH.getSellBoots()) {
-            if (keyH.getSellKey()) {
-                itemToSell = "Key";
-            } else if (keyH.getSellShield()) {
-                itemToSell = "Shield";
-            } else if (keyH.getSellSword()) {
-                itemToSell = "Sword";
-            } else if (keyH.getSellChest()) {
-                itemToSell = "Chest";
-            } else if (keyH.getSellBoots()) {
-                itemToSell = "Boots";
-            }
-            if (gp.inventory.getItemInInvWithName(itemToSell) != null) {
-                switch (itemToSell) {
-                    case "Key":
-                        sellItem("Key");
-                        break;
-                    case "Shield":
-                        sellItem("Shield");
-                        break;
-                    case "Sword":
-                        sellItem("Sword");
-                        break;
-                    case "Boots":
-                        sellItem("Boots");
-                        break;
-                    case "Chest":
-                        sellItem("Chest");
-                        break;
-                }
-            }
-        }
-    }
-
-
+    //MODIFIES: inventory
+    //EFFECTS: "Sells" item by removing it from inventory and adding corresponding amount of coins.
     public void sellItem(String itemName) {
         ObjectSuper coin = new ObjectCoin(gp);
         int amountPaid;
         ObjectSuper itemInQuestion;
 
-        itemInQuestion = gp.inventory.getItemInInvWithName(itemName);
-        gp.inventory.removeOneFromInventoryWithName(itemName);
+        itemInQuestion = gp.getInv().getItemInInv(itemName);
+        gp.getInv().removeItemFromInv(itemName, 1);
         amountPaid = itemInQuestion.valuePerItem;
-        gp.inventory.addMany(coin, amountPaid);
+        gp.getInv().addToInv(coin, amountPaid);
 
         if (itemName.equals("Boots")) {
-            gp.player.speed -= 2;
+            gp.getPlayer().speed -= 2;
         }
     }
 }
 
 
-//    public void confirmSale(String itemToSell) {
-//        ObjectSuper itemInQuestion = gp.inventory.getItemInInvWithName(itemToSell);
-//        int valueOfItem = itemInQuestion.valuePerItem;
-//        gp.ui.drawConfirmSellScreen(itemToSell, valueOfItem);
-//        if (keyH.getSellConfirmed()) {
-//            switch (itemToSell) {
-//                case "Key":
-//                    sellItem("Key");
-//                    break;
-//                case "Shield":
-//                    sellItem("Shield");
-//                    break;
-//                case "Sword":
-//                    sellItem("Sword");
-//                    break;
-//                case "Boots":
-//                    sellItem("Boots");
-//                    break;
-//                case "Chest":
-//                    sellItem("Chest");
-//                    break;
-//            }
-//            gp.gameState = gp.sellSuccessState;
-//
-//        } else if (keyH.getSellCanceled()) {
-//            gp.gameState = gp.sellFailState;
-//        }
-//    }
-
-
-
-//             if (keyH.getSellKey()) {
-//        itemToSell = "Key";
-//        sellItem("Key");
-//    } else if (keyH.getSellShield()) {
-//        sellItem("Shield");
-//    } else if (keyH.getSellSword()) {
-//        sellItem("Sword");
-//    } else if (keyH.getSellChest()) {
-//        sellItem("Chest");
-//    } else if (keyH.getSellBoots()) {
-//        sellItem("Boots");
-//    }
-
-
-
-//    public String getItemBeingSold() {
-//        return itemToSell;
-//    }
-//
-//    public int getValueItemSold() {
-//        ObjectSuper itemInQuestion = gp.inventory.getItemInInvWithName(itemToSell);
-//        int valueOfItem = itemInQuestion.valuePerItem;
-//        return valueOfItem;
-//    }

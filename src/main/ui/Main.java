@@ -2,6 +2,7 @@ package ui;
 
 import javax.swing.*;
 
+
 public class Main {
     public static void main(String[] args) {
 
@@ -18,6 +19,7 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
 
         gamePanel.setUpGame();
         gamePanel.startGameThread();
