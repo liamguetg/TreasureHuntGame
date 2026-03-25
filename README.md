@@ -2,6 +2,8 @@
 
 A top-down, tile-based adventure game built in Java using Swing/AWT. The project includes a tile map loader, collision detection, animated player/NPC movement, an inventory system with item stacking, and a simple NPC-driven shop/trade loop.
 
+<img width="766" height="566" alt="TreasureHunt_screenshot" src="https://github.com/user-attachments/assets/64abe708-7d43-4ff2-bdcd-95ba985e790b" />
+
 ## What it does
 
 - Renders a scrolling 2D world using a tile map loaded from text files.
