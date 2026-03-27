@@ -35,6 +35,19 @@ A top-down, tile-based adventure game built in Java using Swing/AWT. The project
 - Testing:
   - JUnit 5 test suite under `src/test`
 
+
+## Experience gained
+
+This project helped me practice:
+
+- **OOP:** Clear **separation of concerns** (UI vs model vs persistence), **inheritance** for entities/items (`Entities`, `ObjectSuper` hierarchy), **encapsulation** of game state and rules, and **polymorphic** behavior via shared interfaces to the game loop (`update` / `draw`).
+- **Architecture:** **State machine** for menus vs gameplay; **update/render loop**; **collision** and world coordinates kept out of raw input handling.
+- **Test-driven mindset:** **JUnit 5** **unit tests** on **inventory** (add/remove/stacking) to catch regressions without manual playthroughs—**TDD-style** coverage on the easiest-to-break **domain logic** while keeping the GUI under manual test.
+- **Persistence & data:** **JSON** save/load via dedicated reader/writer types; file paths isolated from the frame loop.
+- **Build/runtime:** **Classpath** resource loading for maps/sprites; awareness of what must ship in a **JAR** for a runnable artifact.
+
+
+
 ## Frontend vs backend (code organization)
 
 ### Frontend (UI + input)
@@ -58,7 +71,7 @@ A top-down, tile-based adventure game built in Java using Swing/AWT. The project
   - Loads maps from text (`/Maps/*.txt`)
   - Loads/scales tile images (`/BackgroundTiles/*.png`)
   - Draws the portion of the world near the player (simple culling)
-- `src/main/model/Entities.java`, `src/main/model/Player.java`, `src/main/model/NpcOldMan.java`
+- `src/main/model/Entities.java`, `src/main/model/Player.java`, `src/main/model/NpSalesMan.java`
   - Shared entity logic (world position, direction, sprite animation)
   - Player movement + pickup + win check integration
   - NPC movement via a timed random direction change
@@ -99,7 +112,6 @@ A top-down, tile-based adventure game built in Java using Swing/AWT. The project
 
 ## Gameplay controls
 
-
 - Note: may nedd to hit 'tab' to start
 - Move: `W` `A` `S` `D`
 - Open inventory: `I`
@@ -116,6 +128,7 @@ A top-down, tile-based adventure game built in Java using Swing/AWT. The project
 - Confirm / cancel in menus: `Y` / `N`
 - Exit any menu: `Q` (returns to `playState`)
 
+
 ## Resources/Assets (important for running)
 
 This project loads images and maps from the runtime classpath using absolute resource paths, including:
@@ -131,27 +144,14 @@ If you clone the repo and run from a clean environment, you must ensure those re
 
 ## Running the game from terminal
 
-### Option A: Run prebuilt artifacts (if present)
-
-If your environment already has the prebuilt output, you can run:
-
+If java files are edited (or pre-built artifacts are missing) you must recompile before running:
 ```bash
 cd TreasureHuntGameGit
-java -cp "out/production/210-Project-Starter2" ui.Main
+javac -cp "lib/spec/json-20210307.jar" -d out/production/treasureHuntGame src/main/ui/*.java src/main/model/*.java src/main/persistence/*.java
 ```
-
-### Option B: Compile and run from source
-
+To run:
 ```bash
-cd TreasureHuntGameGit
-mkdir -p out/cli
-javac -d out/cli $(find src/main -name "*.java")
-
-# IMPORTANT:
-# Start the app with a classpath that includes BOTH:
-# - compiled classes (out/cli)
-# - resource folders (Maps/, Items/, BackgroundTiles/, BbSprite/, npcSprites/)
-java -cp "out/cli:<resources-classpath>" ui.Main
+java -cp "out/production/210-Project-Starter2:lib/spec/json-20210307.jar" ui.Main
 ```
 
 ## Testing
@@ -164,17 +164,7 @@ java -cp "out/cli:<resources-classpath>" ui.Main
 
 Note: game execution is interactive/graphics-based, so tests target core logic where possible.
 
-## Experience gained
-
-This project helped me practice:
-
-- Designing a simple but complete game architecture (update loop + render + input routing).
-- Implementing tile-based rendering and collision using hitboxes.
-- Using a state machine (`gameState`) to coordinate UI screens with player actions.
-- Building inventory and shop/trade logic that is approachable to extend (new item types and rules).
 
 
-##
 
-java -cp "out/production/210-Project-Starter2:lib/spec/json-20210307.jar" ui.Main
 

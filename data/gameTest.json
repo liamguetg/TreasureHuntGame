@@ -1,0 +1,12 @@
+{
+    "Inventory:": [
+        {
+            "Item": "Key",
+            "Amount": 1
+        }
+    ],
+    "Character:": {
+        "X-position:": 1104,
+        "Y-position": 1596
+    }
+}
